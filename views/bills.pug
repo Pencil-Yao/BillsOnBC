@@ -1,0 +1,32 @@
+extends template/layout.pug
+	
+	
+block custom_header
+	title test
+	// --------------- Header -------------- //
+	script(src='/js/ui_events.js?v=' + bag.jshash)
+	//script(src='/js/websocket.js?v=' + bag.jshash)
+	//script(src='/js/startup.js?v=' + bag.jshash)
+	//script(src='/js/tx_story.js?v=' + bag.jshash)
+		
+block navpanel
+	// --------------- Navigation Bar  -------------- //
+	include template/nav.pug
+
+block content
+	// --------------- Main Stuff  -------------- //
+	include submitbill.pug
+
+	include mybills.pug
+
+	include lookupbills.pug
+
+	include billhandle.pug
+
+	include template/note.pug
+
+block leftcontent
+	include panel_audit.pug
+
+block footer
+	include template/blockchian.pug

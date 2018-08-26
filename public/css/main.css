@@ -1,0 +1,396 @@
+body{
+  margin: 0 auto;
+  outline: 0;
+  border: 0;
+  vertical-align: baseline;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  color: #555;
+}
+
+/*nav*/
+#logo{
+  display:inline-block;
+  font-weight: 600;
+  font-size: 24px;
+  padding: 14px 20px;
+}
+
+#whoAmI {
+  line-height: 60px;
+  float: right;
+  color: #222832;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+#userIcon {
+  background: #646B73;
+  padding: 8px;
+  border-radius: 20px;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  color: #E5EBEF;
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+#carrot{
+  padding-right: 30px;
+}
+
+#userSelect {
+  display: none;
+  margin-top: 10px;
+  color: #646B73;
+  background: #E5EBEF;
+  border-radius: 10px;
+  width: 100px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+/*layout*/
+#navPanel {
+  top: 0;
+  height: 60px;
+  width: 100%;
+  background: #E5EBEF;
+  color: #39424D;
+}
+
+#rightEverything{
+  top: 60px;
+  height: 100%;
+  width: 85%;
+  left: 15%;
+  position: fixed;
+  overflow-y: auto;
+}
+
+#footerPanel{
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #222832;
+  border-top: 1px whitesmoke solid;
+  height: 40px;
+  padding-bottom: 20px;
+}
+
+#leftEverything{
+  top: 60px;
+  width: 15%;
+  height: 100%;
+  position: fixed;
+  z-index: -1;
+  overflow-y: auto;
+}
+
+#mainPanel{
+  margin: 2%;
+}
+
+/*audit*/
+#auditWrap {
+  color: #fff;
+  background: #646B73;
+  height: 100%;
+}
+
+#menuDrop{
+  padding: 10px;
+  cursor: pointer;
+  float: right;
+}
+
+#menuWrap{
+  color: #E5EBEF;
+  padding: 10px 0 10px 10px;
+  font-size: 18px;
+}
+
+#menuChoice{
+  padding: 10px 0 10px 40px;
+  background-color: slategrey;
+  line-height: 40px;
+}
+
+#submitBill, #myBill, #lookupBill {
+  cursor: pointer;
+}
+
+/*submitbill*/
+#submitWrap {
+  font-size: 16px;
+  display: table;
+  border-spacing: 10px;
+}
+
+.billAttr{
+  display: table-row;
+}
+
+.submitBillInfo{
+  display: table-cell;
+}
+
+.submitBillDate{
+  display: table-cell;
+}
+
+.submitBillIA{
+  display: table-cell;
+}
+
+.submitBillPH{
+  display: table-cell;
+}
+
+.singleEntry{
+  margin: 15px 0;
+}
+
+.ButtonEntry{
+  margin: 15px 0;
+}
+
+/*mybills*/
+#billsList{
+  width: 100%;
+  border: thin solid black;
+  border-collapse: collapse;
+}
+
+#billsListCaption{
+  text-align: left;
+  font-weight: bold;
+  color: white;
+  padding: 5px 10px;
+  background-color: cornflowerblue;
+}
+
+.billsListFTR{
+  line-height: 95%;
+  text-align: left;
+}
+
+#billsList td, th {
+  border-top: thin solid gray;
+  padding: 5px;
+}
+
+#billsList tr:nth-child(2n){
+  background-color: antiquewhite;
+}
+
+/*lookupbills*/
+#LUbillsList{
+  width: 100%;
+  border: thin solid black;
+  border-collapse: collapse;
+}
+
+#LUbillsListCaption{
+  text-align: left;
+  font-weight: bold;
+  color: white;
+  padding: 5px 10px;
+  background-color: cornflowerblue;
+}
+
+.billsListFTR{
+  line-height: 95%;
+  text-align: left;
+}
+
+#LUbillsList td, th {
+  border-top: thin solid gray;
+  padding: 5px;
+}
+
+#LUbillsList tr:nth-child(2n){
+  background-color: antiquewhite;
+}
+
+/*billhandle*/
+#billHandleWrap{
+  position: fixed;
+  top: 5%;
+  left: 10%;
+  width: 80%;
+  padding: 2%;
+  background-color: ghostwhite;
+  z-index: 1005;
+  height: 80%;
+  overflow-y: auto;
+}
+
+#billHH1{
+  font-size: 25px;
+}
+
+#billHandHH2{
+  color: dimgray;
+}
+
+#billsHandleList{
+  width: 100%;
+  border: thin solid black;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+#billsHandleListCaption{
+  text-align: left;
+  font-weight: bold;
+  color: white;
+  padding: 5px 10px;
+  background-color: cornflowerblue;
+}
+
+#billsHandleListFTR{
+  line-height: 95%;
+  text-align: left;
+}
+
+#billsHandleList td, th {
+  border-top: thin solid gray;
+  padding: 5px;
+}
+
+#billsHandleList tr:nth-child(2n){
+  background-color: antiquewhite;
+}
+
+#billsHandleList td.firstcol{
+  word-wrap: break-word;
+  max-width: 150px;
+}
+
+#billHandleForm{
+  font-size: 14px;
+  display: table;
+  border-spacing: 20px 0;
+}
+
+#BHaddtionWrap{
+  display: table;
+  font-size: 14px;
+  border-spacing: 20px 0;
+}
+
+#BHaddtionAttr{
+  display: table-row;
+}
+
+.BHadttionLeft{
+  display: table-cell;
+}
+
+.BHadttionRight{
+  display: table-cell;
+}
+
+#BHbuttonwrap{
+  margin: 30px 0;
+}
+
+/*blockchain*/
+#blockWrap{
+  position:relative;
+  margin: 15px 25px;
+}
+
+#blockLegend {
+  color: #E5EBEF;
+  margin-right: 10px;
+  position: relative;
+  font-size: 18px;
+  background: #222832;
+  z-index: 9;
+}
+
+.block {
+  line-height: 32px;
+  color: #2EB9D6;
+  text-align: center;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  height: 32px;
+  width: 32px;
+  border-radius: 2px;
+  opacity: 5;
+  border: #2EB9D6 solid 1px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/*note*/
+#noteWrap{
+  position: absolute;
+  background-color: ghostwhite;
+  top: 20%;
+  left: 25%;
+  width: 50%;
+  padding: 20px;
+}
+
+#noteH1{
+  font-size: 25px;
+  margin-bottom: 10px;
+}
+
+#noteTxId{
+  word-wrap: break-word;
+  font-size: 16px;
+}
+
+#noteButton{
+  float: right;
+  color: dimgray;
+}
+
+/*login*/
+#loginWrap{
+  position: fixed;
+  left: 25%;
+  width: 50%;
+  background: antiquewhite;
+}
+
+#logintitle{
+  font-size: 26px;
+  font-weight: bold;
+  text-align: center;
+  padding: 25px 0;
+  width: 100%;
+}
+
+#loginInput{
+  position: relative;
+  font-size: 18px;
+  padding: 10px 0;
+  left: 20%;
+}
+
+#loginInput .long {
+  min-width: 60%;
+}
+
+#loginButtonCSS{
+  margin: 30px 0;
+  position: relative;
+  left: 20%;
+}
+
+#loginButton{
+  background-color: cornflowerblue;
+  min-width: 63%;
+  height: 2.7em;
+  border-radius: 3px;
+}

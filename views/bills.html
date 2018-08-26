@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+  <!--Built by: Me-->
+  <!--ETI Labs-->
+  <!--Copyright 2016  - IBM-->
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" charset="UTF-8">
+    <link rel="stylesheet" href="css/font-awesome-4.5.0/css/font-awesome.min.css">
+    <link type="text/css" rel="stylesheet" href="css/main.css">
+    <script src="js/util/jquery-2.2.4.min.js"></script>
+    <script src="js/util/jquery-ui-1.11.4/jquery-ui.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        console.log("hello world");
+      });
+    </script>
+    <title>test</title>
+    <!-- --------------- Header -------------- //-->
+    <script src="js/ui_events.js"></script>
+    <!--script(src='/js/ui_events.js?v=' + bag.jshash)-->
+    <!--script(src='/js/websocket.js?v=' + bag.jshash)-->
+    <!--script(src='/js/startup.js?v=' + bag.jshash)-->
+    <!--script(src='/js/tx_story.js?v=' + bag.jshash)-->
+  </head>
+  <body>
+    <div id="navPanel">
+      <!-- --------------- Navigation Bar  -------------- //-->
+      <div id="logo"> 
+        <!--img(src="/imgs/logo.png")#logoIcon--><span>区块链-票据</span>
+      </div>
+      <div id="whoAmI"><span class="fa fa-user" id="userIcon"></span><span>User1</span><span>&nbsp;</span><span class="fa fa-angle-down" id="carrot"></span>
+        <div id="userSelect"><a class="userLine" href="/logout">Logout</a></div>
+      </div>
+    </div>
+    <div id="rightEverything">
+      <div id="mainPanel">
+        <!-- --------------- Main Stuff  -------------- //-->
+        <div id="SBusedtohidden">
+          <div id="submitWrap">
+            <form action="/submit" method="POST" onsubmit="return confirm('检查无误，发布票据？')">
+              <div class="billAttr">
+                <div class="submitBillInfo">
+                  <div class="singleEntry">
+                    <label>票据号码</label><br>
+                    <input type="text" name="billInfoID" placeholder="输入票据号码" required="required">
+                  </div>
+                  <div class="singleEntry">
+                    <label>票据金额</label><br>
+                    <input type="text" name="billInfoAmt" placeholder="输入票据金额" required="required">
+                  </div>
+                  <div class="singleEntry">
+                    <label>票据类型</label><br>
+                    <input type="text" name="billInfoType" placeholder="输入票据类型" required="required">
+                  </div>
+                </div>
+                <div class="submitBillDate">
+                  <div class="singleEntry">
+                    <label>票据出票日期</label><br>
+                    <input type="text" name="billIssueDate" placeholder="输入出票日期" required="required">
+                  </div>
+                  <div class="singleEntry">
+                    <label>票据到期日期</label><br>
+                    <input type="text" name="billDeadDate" placeholder="输入到期日期" required="required">
+                  </div>
+                </div>
+                <div class="submitBillIA">
+                  <div class="singleEntry">
+                    <label>出票人名称</label><br>
+                    <input type="text" name="issuerName" placeholder="输入出票人名称" required="required">
+                  </div>
+                  <div class="singleEntry">
+                    <label>出票人证件号</label><br>
+                    <input type="text" name="issuerID" placeholder="输入出票人证件" required="required">
+                  </div>
+                  <div class="singleEntry">
+                    <label>承兑人名称</label><br>
+                    <input type="text" name="acceptorName" placeholder="输入承兑人名称" required="required">
+                  </div>
+                  <div class="singleEntry">
+                    <label>承兑人证件号</label><br>
+                    <input type="text" name="acceptOrID" placeholder="输入承兑人证件" required="required">
+                  </div>
+                </div>
+                <div class="submitBillPH">
+                  <div class="singleEntry">
+                    <label>收款人名称</label><br>
+                    <input type="text" name="payeeName" placeholder="输入收款人名称" required="required">
+                  </div>
+                  <div class="singleEntry">
+                    <label>收款人证件号</label><br>
+                    <input type="text" name="payeeID" placeholder="输入收款人证件" required="required">
+                  </div>
+                  <div class="singleEntry">
+                    <label>持票人名称</label><br>
+                    <input type="text" name="holderName" placeholder="输入持票人名称" required="required">
+                  </div>
+                  <div class="singleEntry">
+                    <label>持票人证件号</label><br>
+                    <input type="text" name="holderID" placeholder="输入持票人证件" required="required">
+                  </div>
+                  <div class="ButtonEntry">
+                    <button type="button" id="submitButton"><span class="fa fa-pencil-square-o">&nbsp;&nbsp;</span><span>提交</span></button><span>&nbsp;&nbsp;</span>
+                    <button type="button" id="clearButton"><span class="fa fa-eraser">&nbsp;&nbsp;</span><span>清除</span></button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div id="mybillWrap" hidden>
+          <table id="billsList">
+            <caption id="billsListCaption">票据列表</caption>
+            <tr class="billsListFTR">
+              <th>票据号</th>
+              <th>票据状态</th>
+              <th>所属关系</th>
+              <th>操作</th>
+            </tr>
+            <tr>
+              <td>票据号</td>
+              <td>票据状态</td>
+              <td>所属关系</td>
+              <td>操作</td>
+            </tr>
+            <tr>
+              <td>票据号</td>
+              <td>票据状态</td>
+              <td>所属关系</td>
+              <td>操作</td>
+            </tr>
+            <tr>
+              <td>票据号</td>
+              <td>票据状态</td>
+              <td>所属关系</td>
+              <td>操作</td>
+            </tr>
+            <tr>
+              <td>票据号</td>
+              <td>票据状态</td>
+              <td>所属关系</td>
+              <td>操作</td>
+            </tr>
+          </table>
+        </div>
+        <div id="lookupbillWrap" hidden>
+          <table id="LUbillsList">
+            <caption id="LUbillsListCaption">票据列表</caption>
+            <tr class="billsListFTR">
+              <th>票据号</th>
+              <th>票据状态</th>
+              <th>所属关系</th>
+              <th>操作</th>
+            </tr>
+            <tr>
+              <td>票据号</td>
+              <td>票据状态</td>
+              <td>所属关系</td>
+              <td>操作</td>
+            </tr>
+            <tr>
+              <td>票据号</td>
+              <td>票据状态</td>
+              <td>所属关系</td>
+              <td>操作</td>
+            </tr>
+            <tr>
+              <td>票据号</td>
+              <td>票据状态</td>
+              <td>所属关系</td>
+              <td>操作</td>
+            </tr>
+            <tr>
+              <td>票据号</td>
+              <td>票据状态</td>
+              <td>所属关系</td>
+              <td>操作</td>
+            </tr>
+          </table>
+        </div>
+        <div id="billHandleWrap" hidden><span id="billHH1">票据信息</span><br><span id="billHandHH2">票据状态：<span id="billHState">OK</span></span><br>
+          <table id="billsHandleList">
+            <caption id="billsHandleListCaption">历史流转信息</caption>
+            <tr id="billsHandleListFTR">
+              <th class="firstcol">TxID</th>
+              <th>操作业务</th>
+              <th>操作描述</th>
+              <th>当前持票人</th>
+            </tr>
+            <tr>
+              <td></td>
+              <td>票据状态</td>
+              <td>所属关系</td>
+              <td>操作</td>
+            </tr>
+            <tr>
+              <td>票据号</td>
+              <td>票据状态</td>
+              <td>所属关系</td>
+              <td>操作</td>
+            </tr>
+            <tr>
+              <td>票据号</td>
+              <td>票据状态</td>
+              <td>所属关系</td>
+              <td>操作</td>
+            </tr>
+            <tr>
+              <td>票据号</td>
+              <td>票据状态</td>
+              <td>所属关系</td>
+              <td>操作</td>
+            </tr>
+          </table>
+          <div id="billHandleForm">
+            <form action="/submit" method="POST" onsubmit="return confirm('检查无误，发布票据？')">
+              <div class="billAttr">
+                <div class="submitBillInfo">
+                  <div class="singleEntry">
+                    <label>票据号码</label><br>
+                    <input type="text" name="BHbillInfoID" disabled="disabled">
+                  </div>
+                  <div class="singleEntry">
+                    <label>票据金额</label><br>
+                    <input type="text" name="BHbillInfoAmt" disabled="disabled">
+                  </div>
+                  <div class="singleEntry">
+                    <label>票据类型</label><br>
+                    <input type="text" name="BHbillInfoType" disabled="disabled">
+                  </div>
+                </div>
+                <div class="submitBillDate">
+                  <div class="singleEntry">
+                    <label>票据出票日期</label><br>
+                    <input type="text" name="BHbillIssueDate" disabled="disabled">
+                  </div>
+                  <div class="singleEntry">
+                    <label>票据到期日期</label><br>
+                    <input type="text" name="BHbillDeadDate" disabled="disabled">
+                  </div>
+                </div>
+                <div class="submitBillIA">
+                  <div class="singleEntry">
+                    <label>出票人名称</label><br>
+                    <input type="text" name="BHissuerName" disabled="disabled">
+                  </div>
+                  <div class="singleEntry">
+                    <label>出票人证件号</label><br>
+                    <input type="text" name="BHissuerID" disabled="disabled">
+                  </div>
+                  <div class="singleEntry">
+                    <label>承兑人名称</label><br>
+                    <input type="text" name="BHacceptorName" disabled="disabled">
+                  </div>
+                  <div class="singleEntry">
+                    <label>承兑人证件号</label><br>
+                    <input type="text" name="BHacceptOrID" disabled="disabled">
+                  </div>
+                </div>
+                <div class="submitBillPH">
+                  <div class="singleEntry">
+                    <label>收款人名称</label><br>
+                    <input type="text" name="BHpayeeName" disabled="disabled">
+                  </div>
+                  <div class="singleEntry">
+                    <label>收款人证件号</label><br>
+                    <input type="text" name="BHpayeeID" disabled="disabled">
+                  </div>
+                  <div class="singleEntry">
+                    <label>持票人名称</label><br>
+                    <input type="text" name="BHholderName" disabled="disabled">
+                  </div>
+                  <div class="singleEntry">
+                    <label>持票人证件号</label><br>
+                    <input type="text" name="BHholderID" disabled="disabled">
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div id="BHusedtohidden" hidden>
+            <div id="BHaddtionWrap">
+              <div id="BHaddtionAttr">
+                <div class="BHadttionLeft"><span>若发起背书请填写被背书人信息：</span><br>
+                  <label>背书人名称</label><br>
+                  <input type="text" name="BHendorseeACCT" placeholder="填入被背书人名称">
+                </div>
+                <div class="BHadttionRight"><br>
+                  <label>背书人证件号</label><br>
+                  <input type="text" name="BHendorseeID" placeholder="填入被背书人名称">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="BHbuttonwrap">
+            <button type="button" id="BHbuttonClose"><span class="fa fa-close">&nbsp;&nbsp;</span><span>关闭</span></button>
+          </div>
+        </div>
+        <div id="noteWrap" hidden><span id="noteH1">票据动作</span><br><span id="noteTxId">ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd</span><br><br>
+          <div>
+            <button type="button" id="noteButton"><span class="fa fa-check">&nbsp;&nbsp;</span><span>OK</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="footerPanel">
+      <div id="blockWrap">
+        <div id="blockLegend">BLOCKS</div>
+        <div class="block"><span>1</span></div>
+      </div>
+    </div>
+    <div id="leftEverything">
+      <div id="auditWrap">
+        <div id="menuDrop"><span class="fa fa-angle-down" id="carrot2"></span></div>
+        <div id="menuWrap">
+          <div class="fa fa-bars" id="auditLegend">&nbsp;&nbsp;菜单</div>
+        </div>
+        <div id="menuChoice">
+          <div id="submitBill"><span>发布票据</span></div>
+          <div id="myBill"><span>我的票据</span></div>
+          <div id="lookupBill"><span>票据查询</span></div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <!--	#rightEverything-->
+  <!--		#tint-->
+  <!---->
+  <!--		#navPanel-->
+  <!--			block navpanel-->
+  <!---->
+  <!--		#mainPanel-->
+  <!--			block content-->
+  <!---->
+  <!--		br-->
+  <!--		br-->
+  <!--		br-->
+  <!--		#footerPanel-->
+  <!--			block footer-->
+  <!---->
+  <!--	#leftEverything-->
+  <!--		include ../panel_audit.pug-->
+</html>

@@ -1,0 +1,111 @@
+#billHandleWrap(hidden)
+    span#billHH1 票据信息
+    br
+    span#billHandHH2 票据状态：
+        span#billHState OK
+    br
+    table#billsHandleList
+        caption#billsHandleListCaption 历史流转信息
+        tr#billsHandleListFTR
+            th.firstcol TxID
+            th 操作业务
+            th 操作描述
+            th 当前持票人
+        tr
+            td
+            td 票据状态
+            td 所属关系
+            td 操作
+        tr
+            td 票据号
+            td 票据状态
+            td 所属关系
+            td 操作
+        tr
+            td 票据号
+            td 票据状态
+            td 所属关系
+            td 操作
+        tr
+            td 票据号
+            td 票据状态
+            td 所属关系
+            td 操作
+    #billHandleForm
+        form(action="/submit" method="POST" onsubmit="return confirm('检查无误，发布票据？')")
+            .billAttr
+                .submitBillInfo
+                    .singleEntry
+                        label 票据号码
+                        br
+                        input(type="text" name="BHbillInfoID" disabled="disabled")
+                    .singleEntry
+                        label 票据金额
+                        br
+                        input(type="text" name="BHbillInfoAmt" disabled="disabled")
+                    .singleEntry
+                        label 票据类型
+                        br
+                        input(type="text" name="BHbillInfoType" disabled="disabled")
+                .submitBillDate
+                    .singleEntry
+                        label 票据出票日期
+                        br
+                        input(type="text" name="BHbillIssueDate" disabled="disabled")
+                    .singleEntry
+                        label 票据到期日期
+                        br
+                        input(type="text" name="BHbillDeadDate" disabled="disabled")
+                .submitBillIA
+                    .singleEntry
+                        label 出票人名称
+                        br
+                        input(type="text" name="BHissuerName" disabled="disabled")
+                    .singleEntry
+                        label 出票人证件号
+                        br
+                        input(type="text" name="BHissuerID" disabled="disabled")
+                    .singleEntry
+                        label 承兑人名称
+                        br
+                        input(type="text" name="BHacceptorName" disabled="disabled")
+                    .singleEntry
+                        label 承兑人证件号
+                        br
+                        input(type="text" name="BHacceptOrID" disabled="disabled")
+                .submitBillPH
+                    .singleEntry
+                        label 收款人名称
+                        br
+                        input(type="text" name="BHpayeeName" disabled="disabled")
+                    .singleEntry
+                        label 收款人证件号
+                        br
+                        input(type="text" name="BHpayeeID" disabled="disabled")
+                    .singleEntry
+                        label 持票人名称
+                        br
+                        input(type="text" name="BHholderName" disabled="disabled")
+                    .singleEntry
+                        label 持票人证件号
+                        br
+                        input(type="text" name="BHholderID" disabled="disabled")
+    #BHusedtohidden(hidden)
+        #BHaddtionWrap
+            #BHaddtionAttr
+                .BHadttionLeft
+                    span 若发起背书请填写被背书人信息：
+                    br
+                    label 背书人名称
+                    br
+                    input(type="text" name="BHendorseeACCT" placeholder="填入被背书人名称")
+                .BHadttionRight
+                    br
+                    label 背书人证件号
+                    br
+                    input(type="text" name="BHendorseeID" placeholder="填入被背书人名称")
+
+    #BHbuttonwrap
+        button(type="button")#BHbuttonClose
+            span.fa.fa-close &nbsp;&nbsp;
+            span 关闭

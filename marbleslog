@@ -1,0 +1,256 @@
+info: [fcw] Going to enroll peer_urls=[grpc://localhost:7051], channel_id=mychannel, uuid=marblesDockerComposeNetworkmychannelOrg1MSPfabricpeerorg1, ca_url=http://localhost:7054, orderer_url=grpc://localhost:7050, enroll_id=admin, enroll_secret=adminpw, msp_id=Org1MSP, kvs_path=/root/.hfc-key-store
+debug: enroll id: "admin", secret: "adminpw"
+debug: msp_id:  Org1MSP ca_name:
+info: [fcw] Successfully enrolled user 'admin'
+debug: added peer grpc://localhost:7051
+debug: [fcw] Successfully got enrollment marblesDockerComposeNetworkmychannelOrg1MSPfabricpeerorg1
+info: Success enrolling admin
+debug: Checking if chaincode is already instantiated or not 1
+
+info: Checking for chaincode...
+debug: [fcw] Querying Chaincode: read()
+debug: [fcw] Sending query req: chaincodeId=marbles, fcn=read, args=[selftest], txId=null
+debug: [fcw] Peer Query Response - len: 5 type: number
+debug: [fcw] Successful query transaction.
+
+----------------------------- Chaincode found on channel "mychannel" -----------------------------
+
+
+info: Checking chaincode and ui compatibility...
+debug: [fcw] Querying Chaincode: read()
+debug: [fcw] Sending query req: chaincodeId=marbles, fcn=read, args=[marbles_ui], txId=null
+warn: [fcw] warning - query resp is not json, might be okay: string 4.0.1
+debug: [fcw] Successful query transaction.
+info: Chaincode version is good
+info: Checking ledger for marble owners listed in the config file
+
+info: Fetching EVERYTHING...
+debug: [fcw] Querying Chaincode: read_everything()
+debug: [fcw] Sending query req: chaincodeId=marbles, fcn=read_everything, args=[], txId=null
+debug: [fcw] Peer Query Response - len: 30 type: object
+debug: [fcw] Successful query transaction.
+debug: This company has not registered marble owners
+info: We need to make marble owners
+
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+info: Detected that we have NOT launched successfully yet
+debug: Open your browser to http://localhost:3001 and login as "admin" to initiate startup
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+debug: ------------------------------------------ incoming request ------------------------------------------
+debug: New GET request for /
+debug: ------------------------------------------ incoming request ------------------------------------------
+debug: New GET request for /home
+debug: [ws] closed
+debug: ------------------------------------------ incoming request ------------------------------------------
+debug: New GET request for /
+debug: ------------------------------------------ incoming request ------------------------------------------
+debug: New GET request for /home
+debug: [ws] closed
+debug: ------------------------------------------ incoming request ------------------------------------------
+debug: New GET request for /login
+debug: ------------------------------------------ incoming request ------------------------------------------
+debug: New POST request for /login
+debug: ------------------------------------------ incoming request ------------------------------------------
+debug: New GET request for /home
+
+-------------------------------- Incoming WS Msg --------------------------------
+debug: [ws] received ws msg: {"type":"setup","configure":"register","build_marble_owners":["[\"amy\"","\"alice\"","\"ava\"]"]}
+debug: [ws] setup message type=setup, configure=register, build_marble_owners=[["amy", "alice", "ava"]]
+info: Creating marble owners and marbles
+debug: - creating marble owner:  amy
+
+info: Creating a marble owner...
+debug: [fcw] setting target event url grpc://localhost:7053
+debug: [fcw] Invoking Chaincode: init_owner()
+debug: [fcw] Sending invoke req chaincodeId=marbles, fcn=init_owner, args=[o01534832972198sywQS, amy, United Marbles], 0=132, 1=144, 2=223, 3=174, 4=3, 5=22, 6=73, 7=192, 8=0, 9=12, 10=17, 11=213, 12=44, 13=35, 14=58, 15=142, 16=129, 17=240, 18=48, 19=244, 20=243, 21=237, 22=190, 23=34, _transaction_id=846f194478901b746e29f8369a7a7e6992b4d9f3b36e30b01a78469cae7531e8
+debug: [fcw] listening to transaction event. url: grpc://localhost:7053
+info: [EventHub.js]: _connect - options {"grpc.http2.keepalive_time":300,"grpc.keepalive_time_ms":300000,"grpc.http2.keepalive_timeout":35,"grpc.keepalive_timeout_ms":3500,"grpc.max_receive_message_length":-1,"grpc.max_send_message_length":-1}
+debug: - creating marble owner:  alice
+
+info: Creating a marble owner...
+debug: [fcw] setting target event url grpc://localhost:7053
+debug: [fcw] Invoking Chaincode: init_owner()
+debug: [fcw] Sending invoke req chaincodeId=marbles, fcn=init_owner, args=[o01534832972213n3Xse, alice, United Marbles], 0=187, 1=65, 2=40, 3=194, 4=36, 5=213, 6=116, 7=46, 8=238, 9=84, 10=223, 11=224, 12=105, 13=25, 14=61, 15=106, 16=29, 17=123, 18=210, 19=36, 20=249, 21=55, 22=25, 23=146, _transaction_id=9d4838691db7b51810efa6503e1de064647fd950064ea7b5fe67be9dcc270576
+debug: [fcw] listening to transaction event. url: grpc://localhost:7053
+info: [EventHub.js]: _connect - options {"grpc.http2.keepalive_time":300,"grpc.keepalive_time_ms":300000,"grpc.http2.keepalive_timeout":35,"grpc.keepalive_timeout_ms":3500,"grpc.max_receive_message_length":-1,"grpc.max_send_message_length":-1}
+debug: - creating marble owner:  ava
+
+info: Creating a marble owner...
+debug: [fcw] setting target event url grpc://localhost:7053
+debug: [fcw] Invoking Chaincode: init_owner()
+debug: [fcw] Sending invoke req chaincodeId=marbles, fcn=init_owner, args=[o015348329722233Jvv5, ava, United Marbles], 0=168, 1=237, 2=78, 3=11, 4=140, 5=217, 6=60, 7=75, 8=175, 9=240, 10=233, 11=156, 12=209, 13=4, 14=30, 15=85, 16=105, 17=189, 18=165, 19=207, 20=161, 21=14, 22=238, 23=41, _transaction_id=428ef6a095a799600085b9ecbfb235f4a2b0b6bed0a2c7b79361c0cfd1353d2f
+debug: [fcw] listening to transaction event. url: grpc://localhost:7053
+info: [EventHub.js]: _connect - options {"grpc.http2.keepalive_time":300,"grpc.keepalive_time_ms":300000,"grpc.http2.keepalive_timeout":35,"grpc.keepalive_timeout_ms":3500,"grpc.max_receive_message_length":-1,"grpc.max_send_message_length":-1}
+debug: [fcw] Successfully obtained transaction endorsement
+debug: [fcw] Successfully obtained transaction endorsement
+debug: [fcw] Successfully obtained transaction endorsement
+debug: [fcw] Successfully ordered endorsement transaction.
+debug: [fcw] Successfully ordered endorsement transaction.
+debug: [fcw] Successfully ordered endorsement transaction.
+info: [fcw] The chaincode transaction event has happened! success?: VALID 2097ms
+debug: [fcw] transaction event is disconnected
+info: [fcw] The chaincode transaction event has happened! success?: VALID 2117ms
+debug: [fcw] transaction event is disconnected
+info: [fcw] The chaincode transaction event has happened! success?: VALID 2098ms
+debug: [fcw] transaction event is disconnected
+info: finished creating owners, now for marbles
+debug: prepared marbles obj 9 id=o01534832972213n3Xse, username=alice, $ref=$[0], $ref=$[0], id=o01534832972198sywQS, username=amy, $ref=$[3], $ref=$[3], id=o015348329722233Jvv5, username=ava, $ref=$[6], $ref=$[6]
+
+debug: [startup] going to create marble: color=blue, size=16, owner_id=o01534832972213n3Xse, auth_company=United Marbles
+
+info: Creating a marble...
+debug: [fcw] setting target event url grpc://localhost:7053
+debug: [fcw] Invoking Chaincode: init_marble()
+debug: [fcw] Sending invoke req chaincodeId=marbles, fcn=init_marble, args=[m01534832984328Qm2BP, blue, 16, o01534832972213n3Xse, United Marbles], 0=186, 1=52, 2=63, 3=229, 4=230, 5=17, 6=84, 7=160, 8=118, 9=238, 10=58, 11=36, 12=145, 13=66, 14=169, 15=32, 16=218, 17=182, 18=197, 19=217, 20=88, 21=144, 22=48, 23=48, _transaction_id=0ce39e76a1e7e7957d620d2a94cbcf71de1bd2ca4b9f215de108d192352b959d
+debug: [fcw] listening to transaction event. url: grpc://localhost:7053
+info: [EventHub.js]: _connect - options {"grpc.http2.keepalive_time":300,"grpc.keepalive_time_ms":300000,"grpc.http2.keepalive_timeout":35,"grpc.keepalive_timeout_ms":3500,"grpc.max_receive_message_length":-1,"grpc.max_send_message_length":-1}
+
+debug: [startup] going to create marble: color=blue, size=35, owner_id=o01534832972213n3Xse, auth_company=United Marbles
+
+info: Creating a marble...
+debug: [fcw] setting target event url grpc://localhost:7053
+debug: [fcw] Invoking Chaincode: init_marble()
+debug: [fcw] Sending invoke req chaincodeId=marbles, fcn=init_marble, args=[m01534832984347WiHnU, blue, 35, o01534832972213n3Xse, United Marbles], 0=136, 1=122, 2=22, 3=152, 4=142, 5=133, 6=12, 7=87, 8=215, 9=107, 10=80, 11=229, 12=183, 13=49, 14=2, 15=34, 16=206, 17=20, 18=18, 19=229, 20=152, 21=63, 22=180, 23=176, _transaction_id=3e1b7989ae08cbda71dae4a78c8a4df2fb4efe20b6fba85606c42bceef34f2e4
+debug: [fcw] listening to transaction event. url: grpc://localhost:7053
+info: [EventHub.js]: _connect - options {"grpc.http2.keepalive_time":300,"grpc.keepalive_time_ms":300000,"grpc.http2.keepalive_timeout":35,"grpc.keepalive_timeout_ms":3500,"grpc.max_receive_message_length":-1,"grpc.max_send_message_length":-1}
+
+debug: [startup] going to create marble: color=blue, size=35, owner_id=o01534832972213n3Xse, auth_company=United Marbles
+
+info: Creating a marble...
+debug: [fcw] setting target event url grpc://localhost:7053
+debug: [fcw] Invoking Chaincode: init_marble()
+debug: [fcw] Sending invoke req chaincodeId=marbles, fcn=init_marble, args=[m01534832984358wMkjq, blue, 35, o01534832972213n3Xse, United Marbles], 0=101, 1=238, 2=212, 3=121, 4=115, 5=60, 6=11, 7=232, 8=51, 9=54, 10=194, 11=217, 12=22, 13=92, 14=61, 15=38, 16=204, 17=240, 18=22, 19=39, 20=112, 21=82, 22=115, 23=122, _transaction_id=957029eb788bd89b9e4f40bbe489fda206d147bd12059e032ae9a5643fb1759e
+debug: [fcw] listening to transaction event. url: grpc://localhost:7053
+info: [EventHub.js]: _connect - options {"grpc.http2.keepalive_time":300,"grpc.keepalive_time_ms":300000,"grpc.http2.keepalive_timeout":35,"grpc.keepalive_timeout_ms":3500,"grpc.max_receive_message_length":-1,"grpc.max_send_message_length":-1}
+
+debug: [startup] going to create marble: color=blue, size=35, owner_id=o01534832972198sywQS, auth_company=United Marbles
+
+info: Creating a marble...
+debug: [fcw] setting target event url grpc://localhost:7053
+debug: [fcw] Invoking Chaincode: init_marble()
+debug: [fcw] Sending invoke req chaincodeId=marbles, fcn=init_marble, args=[m01534832984365KYnwn, blue, 35, o01534832972198sywQS, United Marbles], 0=213, 1=208, 2=219, 3=47, 4=82, 5=219, 6=244, 7=91, 8=106, 9=164, 10=153, 11=185, 12=188, 13=18, 14=34, 15=229, 16=109, 17=241, 18=112, 19=64, 20=52, 21=105, 22=6, 23=226, _transaction_id=0cb9f069f6a3e3cf6552271796c9eb67e6b936ffd71dbfbca547b7272afd77c4
+debug: [fcw] listening to transaction event. url: grpc://localhost:7053
+info: [EventHub.js]: _connect - options {"grpc.http2.keepalive_time":300,"grpc.keepalive_time_ms":300000,"grpc.http2.keepalive_timeout":35,"grpc.keepalive_timeout_ms":3500,"grpc.max_receive_message_length":-1,"grpc.max_send_message_length":-1}
+
+debug: [startup] going to create marble: color=blue, size=35, owner_id=o01534832972198sywQS, auth_company=United Marbles
+
+info: Creating a marble...
+debug: [fcw] setting target event url grpc://localhost:7053
+debug: [fcw] Invoking Chaincode: init_marble()
+debug: [fcw] Sending invoke req chaincodeId=marbles, fcn=init_marble, args=[m015348329843718e8GU, blue, 35, o01534832972198sywQS, United Marbles], 0=96, 1=79, 2=181, 3=247, 4=42, 5=59, 6=191, 7=210, 8=205, 9=52, 10=50, 11=75, 12=207, 13=211, 14=126, 15=41, 16=9, 17=252, 18=214, 19=191, 20=235, 21=159, 22=53, 23=109, _transaction_id=a8f6f9a3185cdeb2ba3604c3c596484d280db0947cac282b401e80b7f24a334a
+debug: [fcw] listening to transaction event. url: grpc://localhost:7053
+info: [EventHub.js]: _connect - options {"grpc.http2.keepalive_time":300,"grpc.keepalive_time_ms":300000,"grpc.http2.keepalive_timeout":35,"grpc.keepalive_timeout_ms":3500,"grpc.max_receive_message_length":-1,"grpc.max_send_message_length":-1}
+
+debug: [startup] going to create marble: color=blue, size=16, owner_id=o01534832972198sywQS, auth_company=United Marbles
+
+info: Creating a marble...
+debug: [fcw] setting target event url grpc://localhost:7053
+debug: [fcw] Invoking Chaincode: init_marble()
+debug: [fcw] Sending invoke req chaincodeId=marbles, fcn=init_marble, args=[m01534832984377NdUgS, blue, 16, o01534832972198sywQS, United Marbles], 0=78, 1=33, 2=120, 3=102, 4=139, 5=143, 6=199, 7=188, 8=1, 9=102, 10=69, 11=96, 12=132, 13=231, 14=26, 15=195, 16=190, 17=20, 18=117, 19=217, 20=180, 21=136, 22=154, 23=26, _transaction_id=9ee151ec092b4b97776fbde3dae7d36af2fd0b7c5616f69e7a0908629c76effb
+debug: [fcw] listening to transaction event. url: grpc://localhost:7053
+info: [EventHub.js]: _connect - options {"grpc.http2.keepalive_time":300,"grpc.keepalive_time_ms":300000,"grpc.http2.keepalive_timeout":35,"grpc.keepalive_timeout_ms":3500,"grpc.max_receive_message_length":-1,"grpc.max_send_message_length":-1}
+
+debug: [startup] going to create marble: color=blue, size=16, owner_id=o015348329722233Jvv5, auth_company=United Marbles
+
+info: Creating a marble...
+debug: [fcw] setting target event url grpc://localhost:7053
+debug: [fcw] Invoking Chaincode: init_marble()
+debug: [fcw] Sending invoke req chaincodeId=marbles, fcn=init_marble, args=[m01534832984388HAhD1, blue, 16, o015348329722233Jvv5, United Marbles], 0=154, 1=106, 2=163, 3=57, 4=151, 5=46, 6=51, 7=221, 8=164, 9=71, 10=175, 11=239, 12=43, 13=226, 14=71, 15=144, 16=0, 17=189, 18=103, 19=50, 20=162, 21=21, 22=241, 23=196, _transaction_id=45f2efa42565263e2c53f367f5a8a0d9eeceade187822f36a8a66d8cedde1911
+debug: [fcw] listening to transaction event. url: grpc://localhost:7053
+info: [EventHub.js]: _connect - options {"grpc.http2.keepalive_time":300,"grpc.keepalive_time_ms":300000,"grpc.http2.keepalive_timeout":35,"grpc.keepalive_timeout_ms":3500,"grpc.max_receive_message_length":-1,"grpc.max_send_message_length":-1}
+
+debug: [startup] going to create marble: color=blue, size=35, owner_id=o015348329722233Jvv5, auth_company=United Marbles
+
+info: Creating a marble...
+debug: [fcw] setting target event url grpc://localhost:7053
+debug: [fcw] Invoking Chaincode: init_marble()
+debug: [fcw] Sending invoke req chaincodeId=marbles, fcn=init_marble, args=[m01534832984394b11Cn, blue, 35, o015348329722233Jvv5, United Marbles], 0=236, 1=25, 2=52, 3=159, 4=238, 5=19, 6=2, 7=135, 8=173, 9=169, 10=222, 11=151, 12=129, 13=133, 14=117, 15=92, 16=255, 17=75, 18=226, 19=30, 20=79, 21=150, 22=174, 23=201, _transaction_id=7a734d8013a7a84a7a338f9424485acfba6e964dc895e557b68c8905e9407ad9
+debug: [fcw] listening to transaction event. url: grpc://localhost:7053
+info: [EventHub.js]: _connect - options {"grpc.http2.keepalive_time":300,"grpc.keepalive_time_ms":300000,"grpc.http2.keepalive_timeout":35,"grpc.keepalive_timeout_ms":3500,"grpc.max_receive_message_length":-1,"grpc.max_send_message_length":-1}
+
+debug: [startup] going to create marble: color=blue, size=35, owner_id=o015348329722233Jvv5, auth_company=United Marbles
+
+info: Creating a marble...
+debug: [fcw] setting target event url grpc://localhost:7053
+debug: [fcw] Invoking Chaincode: init_marble()
+debug: [fcw] Sending invoke req chaincodeId=marbles, fcn=init_marble, args=[m01534832984400SiSCV, blue, 35, o015348329722233Jvv5, United Marbles], 0=204, 1=123, 2=188, 3=239, 4=1, 5=136, 6=37, 7=77, 8=24, 9=77, 10=54, 11=37, 12=97, 13=30, 14=248, 15=197, 16=29, 17=160, 18=58, 19=59, 20=235, 21=14, 22=40, 23=228, _transaction_id=be38bb1510f0953956eb011819c882123d6357cbd9870c06358edc0c9926a801
+debug: [fcw] listening to transaction event. url: grpc://localhost:7053
+info: [EventHub.js]: _connect - options {"grpc.http2.keepalive_time":300,"grpc.keepalive_time_ms":300000,"grpc.http2.keepalive_timeout":35,"grpc.keepalive_timeout_ms":3500,"grpc.max_receive_message_length":-1,"grpc.max_send_message_length":-1}
+debug: [fcw] Successfully obtained transaction endorsement
+debug: [fcw] Successfully ordered endorsement transaction.
+debug: [fcw] Successfully obtained transaction endorsement
+debug: [fcw] Successfully obtained transaction endorsement
+debug: [fcw] Successfully obtained transaction endorsement
+debug: [fcw] Successfully obtained transaction endorsement
+debug: [fcw] Successfully obtained transaction endorsement
+debug: [fcw] Successfully obtained transaction endorsement
+debug: [fcw] Successfully obtained transaction endorsement
+debug: [fcw] Successfully obtained transaction endorsement
+debug: [fcw] Successfully ordered endorsement transaction.
+debug: [fcw] Successfully ordered endorsement transaction.
+debug: [fcw] Successfully ordered endorsement transaction.
+debug: [fcw] Successfully ordered endorsement transaction.
+debug: [fcw] Successfully ordered endorsement transaction.
+debug: [fcw] Successfully ordered endorsement transaction.
+debug: [fcw] Successfully ordered endorsement transaction.
+debug: [fcw] Successfully ordered endorsement transaction.
+info: [fcw] The chaincode transaction event has happened! success?: VALID 2132ms
+debug: [fcw] transaction event is disconnected
+info: [fcw] The chaincode transaction event has happened! success?: VALID 2087ms
+debug: [fcw] transaction event is disconnected
+info: [fcw] The chaincode transaction event has happened! success?: VALID 2118ms
+debug: [fcw] transaction event is disconnected
+info: [fcw] The chaincode transaction event has happened! success?: VALID 2129ms
+debug: [fcw] transaction event is disconnected
+info: [fcw] The chaincode transaction event has happened! success?: VALID 2181ms
+debug: [fcw] transaction event is disconnected
+info: [fcw] The chaincode transaction event has happened! success?: VALID 2121ms
+debug: [fcw] transaction event is disconnected
+info: [fcw] The chaincode transaction event has happened! success?: VALID 2162ms
+debug: [fcw] transaction event is disconnected
+info: [fcw] The chaincode transaction event has happened! success?: VALID 2137ms
+debug: [fcw] transaction event is disconnected
+info: [fcw] The chaincode transaction event has happened! success?: VALID 2164ms
+debug: [fcw] transaction event is disconnected
+debug: - finished creating asset
+
+------------------------------------------ All Done ------------------------------------------
+
+debug: [ws] broadcasting to clients.  1 app_state
+debug: [fcw] Querying Channel Stats
+
+info: New block detected! 6 low=6, high=0, unsigned=true, currentBlockHash=86122000300000000110000000000118895006708029800200032000004560420705003240000386005159707300, previousBlockHash=86122000300000000110000000000118895006708029800200032000004560420705003240000386005159707300
+debug: [checking] there are new things, sending to all clients
+debug: [ws] broadcasting to clients.  1 block
+
+info: Fetching EVERYTHING...
+debug: [fcw] Querying Chaincode: read_everything()
+debug: [fcw] Sending query req: chaincodeId=marbles, fcn=read_everything, args=[], txId=null
+debug: [fcw] Peer Query Response - len: 1778 type: object
+debug: [fcw] Successful query transaction.
+
+debug: [checking] number of owners: 3
+debug: [checking] number of marbles: 9
+debug: [checking] there are new things, sending to all clients
+debug: [ws] broadcasting to clients.  1 everything
+
+-------------------------------- Incoming WS Msg --------------------------------
+debug: [ws] received ws msg: {"type":"read_everything","v":1}
+info: [ws] read everything req
+debug: [fcw] Querying Channel Stats
+debug: [checking] on demand req, sending to a client
+
+info: Fetching EVERYTHING...
+debug: [fcw] Querying Chaincode: read_everything()
+debug: [fcw] Sending query req: chaincodeId=marbles, fcn=read_everything, args=[], txId=null
+debug: [fcw] Peer Query Response - len: 1778 type: object
+debug: [fcw] Successful query transaction.
+
+debug: [checking] number of owners: 3
+debug: [checking] number of marbles: 9
+debug: [checking] same everything as last time
+debug: [checking] sending to 1 client
+debug: [fcw] Querying Channel Stats

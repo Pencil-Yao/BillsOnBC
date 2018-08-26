@@ -1,0 +1,24 @@
+extends template/layout.pug
+
+
+block custom_header
+    title testlogin
+
+block navpanel
+    // --------------- Navigation Bar  -------------- //
+    include template/nav.pug
+
+block content
+    #loginWrap
+        #logintitle
+            span 区块链票据
+        br
+        br
+        #loginInput
+            input(name="loginUser" type="text" placeholder="UserName").long
+            br
+            input(name="loginKey" type="password" placeholder="UserKey").long
+        #loginButtonCSS
+            button(type="button")#loginButton
+                span.fa.fa-sign-in &nbsp;&nbsp;
+                span 登录

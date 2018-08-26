@@ -1,0 +1,9 @@
+---
+root:
+  $ref: ./nls/messages.yml
+en-AA:
+  $ref: ./nls/messages.yml
+en-RR:
+  $ref: ./nls/messages.yml
+en-ZZ:
+  $ref: ./nls/messages.yml
