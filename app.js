@@ -163,20 +163,21 @@ if (config_error) {
 			startup_lib.setup_marbles_lib(host, port, function () {
 
 				// --- [3] Check If We have Started Marbles Before --- //
-				startup_lib.detect_prev_startup({ startup: true }, function (err) {
-					if (err) {
-						startup_lib.startup_unsuccessful(host, port);
-					} else {
-						console.log('\n\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -');
-						logger.debug('Detected that we have launched successfully before');
-						logger.debug('Welcome back - Marbles is ready');
-						logger.debug('Open your browser to http://' + host + ':' + port + ' and login as "admin"');
-						console.log('- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n\n');
-					}
-				});
+				// startup_lib.detect_prev_startup({ startup: true }, function (err) {
+				// 	if (err) {
+				// 		startup_lib.startup_unsuccessful(host, port);
+				// 	} else {
+				// 		console.log('\n\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -');
+				// 		logger.debug('Detected that we have launched successfully before');
+				// 		logger.debug('Welcome back - Marbles is ready');
+				// 		logger.debug('Open your browser to http://' + host + ':' + port + ' and login as "admin"');
+				// 		console.log('- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n\n');
+				// 	}
+				// });
 
 				// --- [4] Wait for the user to go to the browser (step 5 is in websocket code below) --- //
 				// ZZzzzzzZZZzzzzzzzzZZzZZZZZzzzZZZzzz
+        logger.debug('Open your browser to http://' + host + ':' + port + ' and login as "admin"');
 			});
 		}
 	});

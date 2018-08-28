@@ -150,6 +150,29 @@ module.exports = function (cp, fcw, logger) {
 				});
 			}
 		}
+		//issue bill
+		else if (data.type === 'issue'){
+      logger.info('[ws] issue bill req');
+      options.args = {
+        billInfoID: data.billInfoID,
+        billInfoAmt: data.billInfoAmt,
+        billInfoType: data.billInfoType,
+        billIssueDate: data.billIssueDate,
+        billDeadDate: data.billDeadDate,
+        issuerName: data.issuerName,
+        issuerID: data.issuerID,
+        acceptorName: data.acceptorName,
+        acceptOrID: data.acceptOrID,
+        payeeName: data.payeeName,
+        payeeID: data.payeeID,
+        holderName: data.holderName,
+        holderID: data.holderID,
+      };
+      marbles_lib.issue_a_bill(options, function (err, resp) {
+        if (err != null) send_err(err, data);
+        else options.ws.send(JSON.stringify({ msg: 'tx_step', state: 'finished' }));
+      });
+		}
 
 		// send transaction error msg
 		function send_err(msg, input) {

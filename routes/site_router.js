@@ -23,19 +23,19 @@ module.exports = function (logger, cp) {
 	// ============================================================================================================================
 	// Login
 	// ============================================================================================================================
-	app.get('/login', function (req, res) {
-		res.render('login', { title: 'Marbles - Login', bag: build_bag(req) });
-	});
-
-	app.post('/login', function (req, res) {
-		req.session.user = { username: 'Admin' };
-		res.redirect('/home');
-	});
-
-	app.get('/logout', function (req, res) {
-		req.session.destroy();
-		res.redirect('/login');
-	});
+	// app.get('/login', function (req, res) {
+	// 	res.render('login', { title: 'Marbles - Login', bag: build_bag(req) });
+	// });
+  //
+	// app.post('/login', function (req, res) {
+	// 	req.session.user = { username: 'Admin' };
+	// 	res.redirect('/home');
+	// });
+  //
+	// app.get('/logout', function (req, res) {
+	// 	req.session.destroy();
+	// 	res.redirect('/login');
+	// });
 
 
 	// ============================================================================================================================
@@ -45,9 +45,9 @@ module.exports = function (logger, cp) {
 		route_me(req, res);
 	});
 
-	app.get('/create', function (req, res) {
-		route_me(req, res);
-	});
+	// app.get('/create', function (req, res) {
+	// 	route_me(req, res);
+	// });
 
 	function route_me(req, res) {
 		//if (!req.session.user || !req.session.user.username) {		// no session? send them to login

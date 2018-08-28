@@ -70,7 +70,7 @@ module.exports = function (logger, cp, fcw, marbles_lib, ws_server) {
 		logger.info('Checking ledger for marble owners listed in the config file');
 		marbles_lib.read_everything(null, function (err, resp) {					//read the ledger for marble owners
 			if (err != null) {
-				logger.warn('Error reading ledger');
+				logger.warn('Error reading ledger', err);
 				if (cb) cb(true);
 			} else {
 				if (!detectCompany(resp) || startup_lib.find_missing_owners(resp)) {	//check if each user in the settings file has been created in the ledger
@@ -160,19 +160,20 @@ module.exports = function (logger, cp, fcw, marbles_lib, ws_server) {
 			} else {												// else we already instantiated
 				console.log('\n----------------------------- Chaincode found on channel "' + cp.getChannelId() + '" -----------------------------\n');
 				cc_detect_attempt = 0;			// reset
+        if(cb) cb(null);
 
 				// --- Check Chaincode Compatibility  --- //
-				marbles_lib.check_version(options, function (err, resp) {
-					if (cp.errorWithVersions(resp)) {								// incompatible cc w/app
-						ws_server.record_state('find_chaincode', 'failed');
-						ws_server.broadcast_state();
-					} else {														// compatible cc w/app
-						logger.info('Chaincode version is good');
-						ws_server.record_state('find_chaincode', 'success');
-						ws_server.broadcast_state();
-						if (cb) cb(null);
-					}
-				});
+				// marbles_lib.check_version(options, function (err, resp) {
+				// 	if (cp.errorWithVersions(resp)) {								// incompatible cc w/app
+				// 		ws_server.record_state('find_chaincode', 'failed');
+				// 		ws_server.broadcast_state();
+				// 	} else {														// compatible cc w/app
+				// 		logger.info('Chaincode version is good');
+				// 		ws_server.record_state('find_chaincode', 'success');
+				// 		ws_server.broadcast_state();
+				// 		if (cb) cb(null);
+				// 	}
+				// });
 			}
 		});
 	};

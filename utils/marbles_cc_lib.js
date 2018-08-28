@@ -23,7 +23,7 @@ module.exports = function (enrollObj, g_options, fcw, logger) {
 			channel_id: g_options.channel_id,
 			chaincode_id: g_options.chaincode_id,
 			chaincode_version: g_options.chaincode_version,
-			cc_function: 'read',
+			cc_function: 'check',
 			cc_args: ['selftest']
 		};
 		fcw.query_chaincode(enrollObj, opts, function (err, resp) {  // send a request to our peer
@@ -355,6 +355,33 @@ module.exports = function (enrollObj, g_options, fcw, logger) {
 		for (var i = str.length; i < length; i++) str = '0' + String(str);
 		return str;
 	}
+
+  //Bill ----------------------------------------------------------------------------------
+  //issue a bill
+  marbles_chaincode.issue_a_bill = function (options, cb) {
+    console.log('');
+    logger.info('Issuing a bill...');
+
+    var opts = {
+      peer_urls: g_options.peer_urls,
+      peer_tls_opts: g_options.peer_tls_opts,
+      channel_id: g_options.channel_id,
+      chaincode_id: g_options.chaincode_id,
+      chaincode_version: g_options.chaincode_version,
+      event_urls: g_options.event_urls,
+      endorsed_hook: options.endorsed_hook,
+      ordered_hook: options.ordered_hook,
+      cc_function: 'issue',
+      cc_args: [JSON.stringify(options.args)],
+    };
+    fcw.invoke_chaincode(enrollObj, opts, function (err, resp) {
+      if (cb) {
+        if (!resp) resp = {};
+        resp.id = opts.cc_args[0];			//pass marble id back
+        cb(err, resp);
+      }
+    });
+  };
 
 	return marbles_chaincode;
 };
