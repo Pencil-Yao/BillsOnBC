@@ -150,11 +150,12 @@ module.exports = function (cp, fcw, logger) {
 				});
 			}
 		}
+
 		//issue bill
 		else if (data.type === 'issue'){
       logger.info('[ws] issue bill req');
       options.args = {
-        billInfoID: data.billInfoID,
+        billInfoID: leftPad(data.billInfoID, 19),
         billInfoAmt: data.billInfoAmt,
         billInfoType: data.billInfoType,
         billIssueDate: data.billIssueDate,
@@ -169,10 +170,47 @@ module.exports = function (cp, fcw, logger) {
         holderID: data.holderID,
       };
       marbles_lib.issue_a_bill(options, function (err, resp) {
-        if (err != null) send_err(err, data);
-        else options.ws.send(JSON.stringify({ msg: 'tx_step', state: 'finished' }));
+      	if (err != null) send_err(err, data);
+        else {
+        	options.ws.send(JSON.stringify({ msg: 'tx_issue', state: 'finished', data: options.args.billInfoID, hdrid: options.args.holderID }));
+        }
       });
 		}
+
+		//query by uerID
+		else if(data.type === 'queryByUserID'){
+      logger.info('[ws] query by userID req');
+      options.args = {
+        holderID: data.hdrid
+      };
+      ws_server.check_for_updates(ws, options);
+		}
+
+		//query by billID
+    else if(data.type === 'queryByBillID'){
+		  logger.info('[ws] query by billID req');
+		  options.args = {
+		    billInfoID: leftPad(data.billInfoID, 19)
+      };
+      marbles_lib.queryByBillID(options, function (err, resp) {
+        if (err != null) {
+          console.log('');
+          logger.debug('[checking] could not query by bill id:', err);
+          var obj = {
+            msg: 'error',
+            e: err,
+          };
+          options.ws.send(JSON.stringify(obj)); 								//send to a client
+        }
+        else {
+          var billWithHistory = resp.parsed;
+          if (billWithHistory) {
+            logger.debug('[checking] lookup bill: ', billWithHistory);
+          }
+          options.ws.send(JSON.stringify({msg: 'tx_queryBillID', state: 'finished', data: billWithHistory}));
+        }
+      });
+    }
 
 		// send transaction error msg
 		function send_err(msg, input) {
@@ -224,7 +262,7 @@ module.exports = function (cp, fcw, logger) {
 	// --------------------------------------------------------
 	// Check for Updates to Ledger
 	// --------------------------------------------------------
-	ws_server.check_for_updates = function (ws_client) {
+	ws_server.check_for_updates = function (ws_client, options) {
 		marbles_lib.channel_stats(null, function (err, resp) {
 			var newBlock = false;
 			if (err != null) {
@@ -235,51 +273,46 @@ module.exports = function (cp, fcw, logger) {
 				if (ws_client) ws_client.send(JSON.stringify(eObj)); 									//send to a client
 				else wss.broadcast(eObj);																//send to all clients
 			} else {
-				if (resp && resp.height && resp.height.low) {
-					if (resp.height.low > known_height || ws_client) {
-						if (!ws_client) {
-							console.log('');
-							logger.info('New block detected!', resp.height.low, resp);
-							known_height = resp.height.low;
-							newBlock = true;
-							logger.debug('[checking] there are new things, sending to all clients');
-							wss.broadcast({ msg: 'block', e: null, block_height: resp.height.low });	//send to all clients
-						} else {
-							logger.debug('[checking] on demand req, sending to a client');
-							var obj = {
-								msg: 'block',
-								e: null,
-								block_height: resp.height.low,
-								block_delay: cp.getBlockDelay()
-							};
-							ws_client.send(JSON.stringify(obj)); 										//send to a client
-						}
-					}
-				}
+				// if (resp && resp.height && resp.height.low) {
+				// 	if (resp.height.low > known_height || ws_client) {
+				// 		if (!ws_client) {
+				// 			console.log('');
+				// 			logger.info('New block detected!', resp.height.low, resp);
+				// 			known_height = resp.height.low;
+				// 			newBlock = true;
+				// 			logger.debug('[checking] there are new things, sending to all clients');
+				// 			wss.broadcast({ msg: 'block', e: null, block_height: resp.height.low });	//send to all clients
+				// 		} else {
+				// 			logger.debug('[checking] on demand req, sending to a client');
+				// 			var obj = {
+				// 				msg: 'block',
+				// 				e: null,
+				// 				block_height: resp.height.low,
+				// 				block_delay: cp.getBlockDelay()
+				// 			};
+				// 			ws_client.send(JSON.stringify(obj)); 										//send to a client
+				// 		}
+				// 	}
+				// }
 			}
 
 			if (newBlock || ws_client) {
-				read_everything(ws_client, function () {
-					sch_next_check();						//check again
+				queryByUserID(ws_client, options, function () {
+					// sch_next_check();						//check again
 				});
-			} else {
-				sch_next_check();							//check again
 			}
+			// else {
+			// 	sch_next_check();							//check again
+			// }
 		});
 	};
 
-	// read complete state of marble world
-	function read_everything(ws_client, cb) {
-		const channel = cp.getChannelId();
-		const first_peer = cp.getFirstPeerName(channel);
-		var options = {
-			peer_urls: [cp.getPeersUrl(first_peer)],
-		};
-
-		marbles_lib.read_everything(options, function (err, resp) {
+	// read complete state of bills world
+	function queryByUserID(ws_client, options, cb) {
+		marbles_lib.queryByUserID(options, function (err, resp) {
 			if (err != null) {
 				console.log('');
-				logger.debug('[checking] could not get everything:', err);
+				logger.debug('[checking] could not query by user id:', err);
 				var obj = {
 					msg: 'error',
 					e: err,
@@ -289,29 +322,25 @@ module.exports = function (cp, fcw, logger) {
 				if (cb) cb();
 			}
 			else {
-				var data = resp.parsed;
-				if (data && data.owners && data.marbles) {
-					console.log('');
-					logger.debug('[checking] number of owners:', data.owners.length);
-					logger.debug('[checking] number of marbles:', data.marbles.length);
+				var billsList = resp.parsed;
+				if (billsList) {
+					logger.debug('[checking] number of bills:', billsList.length);
 				}
 
-				data.owners = organize_usernames(data.owners);
-				data.marbles = organize_marbles(data.marbles);
 				var knownAsString = JSON.stringify(known_everything);			//stringify for easy comparison (order should stay the same)
-				var latestListAsString = JSON.stringify(data);
+				var latestListAsString = JSON.stringify(billsList);
 
 				if (knownAsString === latestListAsString) {
-					logger.debug('[checking] same everything as last time');
+					logger.debug('[checking] same bills list as last time');
 					if (ws_client !== null) {									//if this is answering a clients req, send to 1 client
 						logger.debug('[checking] sending to 1 client');
-						ws_client.send(JSON.stringify({ msg: 'everything', e: err, everything: data }));
+						ws_client.send(JSON.stringify({ msg: 'everything', e: err, everything: latestListAsString }));
 					}
 				}
 				else {															//detected new things, send it out
 					logger.debug('[checking] there are new things, sending to all clients');
-					known_everything = data;
-					wss.broadcast({ msg: 'everything', e: err, everything: data });	//sent to all clients
+					known_everything = latestListAsString;
+					wss.broadcast({ msg: 'everything', e: err, everything: latestListAsString });	//sent to all clients
 				}
 				if (cb) cb();
 			}
@@ -369,6 +398,12 @@ module.exports = function (cp, fcw, logger) {
 		});
 		return temp;
 	}
+
+  // left pad string with "0"s
+  function leftPad(str, length) {
+    for (var i = str.length; i < length; i++) str = '0' + String(str);
+    return str;
+  }
 
 	return ws_server;
 };

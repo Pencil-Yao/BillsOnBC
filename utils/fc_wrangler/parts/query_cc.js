@@ -45,7 +45,7 @@ module.exports = function (logger) {
 			}
 			if (cb) return cb(formatted.error, formatted);
 		}).catch(function (err) {
-			logger.error('[fcw] Error in query catch block', typeof err, err);
+			logger.error('[fcw] Error in query catch block. err: ', err);
 
 			if (cb) return cb(err, null);
 			else return;

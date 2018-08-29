@@ -160,7 +160,7 @@ module.exports = function (logger, cp, fcw, marbles_lib, ws_server) {
 			} else {												// else we already instantiated
 				console.log('\n----------------------------- Chaincode found on channel "' + cp.getChannelId() + '" -----------------------------\n');
 				cc_detect_attempt = 0;			// reset
-        if(cb) cb(null);
+        if (cb) cb(null);
 
 				// --- Check Chaincode Compatibility  --- //
 				// marbles_lib.check_version(options, function (err, resp) {

@@ -4,6 +4,7 @@
 **/temp
 **/public/logs/**
 .idea
+.bluemix
 .project
 /cc_summaries
 keyValStore*

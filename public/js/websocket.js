@@ -1,6 +1,6 @@
-var getEverythingWatchdog = null;
+
+var ws = {};
 var wsTxt = '[ws]';
-var pendingTransaction = null;
 var pendingTxDrawing = [];
 
 // =================================================================================
@@ -62,18 +62,24 @@ function connect_to_server() {
   function onMessage(msg) {
     try {
       var msgObj = JSON.parse(msg.data);
+      console.log(wsTxt + ' rec', msgObj.msg, msgObj);
 
-      if (msgObj.msg === 'data1') {
+      if (msgObj.msg === 'everything') {
+        build_user_bills(JSON.parse(msgObj.everything));
       }
 
-      //transaction
-      else if (msgObj.msg === 'tx_step') {
-        console.log(wsTxt + ' rec', msgObj.msg, msgObj);
-        // show_tx_step(msgObj);
+      //issue back
+      else if (msgObj.msg === 'tx_issue') {
+        build_note(msgObj);
+        getBillsByUserID(msgObj.hdrid); //todo independent to invoke
+      }
+
+      //single bill quert
+      else if (msgObj.msg === 'tx_queryBillID') {
+        build_billhandle(msgObj.data)
       }
 
       else if (msgObj.msg === 'tx_error') {
-        console.log(wsTxt + ' rec', msgObj.msg, msgObj);
         if (msgObj.e) {
           var err_msg = (msgObj.e.parsed) ? msgObj.e.parsed : msgObj.e;
           // addshow_notification(build_notification(true, escapeHtml(err_msg)), true);
@@ -85,7 +91,6 @@ function connect_to_server() {
 
       //general error
       else if (msgObj.msg === 'error') {
-        console.log(wsTxt + ' rec', msgObj.msg, msgObj);
         if (msgObj.e && msgObj.e.parsed) {
           // addshow_notification(build_notification(true, escapeHtml(msgObj.e.parsed)), true);
           console.log(msgObj.e.parsed);
@@ -102,4 +107,17 @@ function connect_to_server() {
       console.log(wsTxt + ' error handling a ws message', e);
     }
   }
+
+  function onError(evt) {
+    console.log(wsTxt + ' ERROR ', evt);
+  }
+}
+
+// =================================================================================
+// Helper Fun
+// =================================================================================
+//get bills list through holderid
+function getBillsByUserID(hdrid) {
+  console.log(wsTxt + ' sending query bills by userID msg');
+  ws.send(JSON.stringify({ type: 'queryByUserID', version: 1, hdrid: hdrid}));
 }

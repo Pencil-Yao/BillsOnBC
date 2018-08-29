@@ -307,24 +307,6 @@ module.exports = function (enrollObj, g_options, fcw, logger) {
 
 
 	// All ---------------------------------------------------------------------------------
-
-	//build full name
-	marbles_chaincode.read_everything = function (options, cb) {
-		console.log('');
-		logger.info('Fetching EVERYTHING...');
-
-		var opts = {
-			peer_urls: g_options.peer_urls,
-			peer_tls_opts: g_options.peer_tls_opts,
-			channel_id: g_options.channel_id,
-			chaincode_version: g_options.chaincode_version,
-			chaincode_id: g_options.chaincode_id,
-			cc_function: 'read_everything',
-			cc_args: ['']
-		};
-		fcw.query_chaincode(enrollObj, opts, cb);
-	};
-
 	// get block height of the channel
 	marbles_chaincode.channel_stats = function (options, cb) {
 		var opts = {
@@ -381,6 +363,36 @@ module.exports = function (enrollObj, g_options, fcw, logger) {
         cb(err, resp);
       }
     });
+  };
+  //query bills list by userID
+  marbles_chaincode.queryByUserID = function (options, cb) {
+    logger.info('Query by User ID...');
+
+    var opts = {
+      peer_urls: g_options.peer_urls,
+      peer_tls_opts: g_options.peer_tls_opts,
+      channel_id: g_options.channel_id,
+      chaincode_version: g_options.chaincode_version,
+      chaincode_id: g_options.chaincode_id,
+      cc_function: 'queryMyBill',
+      cc_args: [options.args.holderID]
+    };
+    fcw.query_chaincode(enrollObj, opts, cb);
+  };
+  //query bills list by userID
+  marbles_chaincode.queryByBillID = function (options, cb) {
+    logger.info('Query by Bill ID...');
+
+    var opts = {
+      peer_urls: g_options.peer_urls,
+      peer_tls_opts: g_options.peer_tls_opts,
+      channel_id: g_options.channel_id,
+      chaincode_version: g_options.chaincode_version,
+      chaincode_id: g_options.chaincode_id,
+      cc_function: 'queryByBillID',
+      cc_args: [options.args.billInfoID]
+    };
+    fcw.query_chaincode(enrollObj, opts, cb);
   };
 
 	return marbles_chaincode;

@@ -2,6 +2,7 @@
 var mainpannel = ["submitBill", "mybills", "lookupbills"];
 var mp_stat = null;
 var mp_dom = null;
+var block_ui_delay = 5000; 								//default, gets set in ws block msg
 $(document).on('ready', function () {
   mp_stat = mainpannel[0];
   mp_dom = $('#SBusedtohidden');
@@ -20,7 +21,7 @@ $(document).on('ready', function () {
     }
   });
 
-  //paudit
+  //paudit---------------------------------------------------------------------
   $('#menuDrop').click(function () {
     if ($('#menuChoice').is(':visible')) {
       $('#menuChoice').fadeOut();
@@ -60,7 +61,8 @@ $(document).on('ready', function () {
     }
   });
 
-  //mainpanel
+  //mainpanel---------------------------------------------------------------------
+  //submit bill button
   $('#submitButton').click(function () {
     console.log('Issue Bill');
     var obj = {
@@ -82,5 +84,32 @@ $(document).on('ready', function () {
     };
     console.log('Issue bill, sending', obj);
     ws.send(JSON.stringify(obj));
+    //todo loading step
+  });
+
+  //note---------------------------------------------------------------------
+  //note ok
+  $('#noteButton').click(function () {
+    $('#noteWrap').fadeOut();
+  });
+
+  //mybill---------------------------------------------------------------------
+  //bill index button
+  $(document).on('click', '.billButton', function () {
+    var billID = $(this).attr('billID');
+    var obj = {
+      type: 'queryByBillID',
+      billInfoID: billID,
+      version: 1
+    };
+    console.log('query billID sending', obj)
+    ws.send(JSON.stringify(obj));
+  });
+
+
+  //billhandl---------------------------------------------------------------------
+  //close the pannel
+  $('#BHbuttonClose').click(function () {
+    $('#billHandleWrap').fadeOut();
   });
 });

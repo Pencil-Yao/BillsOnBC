@@ -173,11 +173,6 @@ body{
   background-color: cornflowerblue;
 }
 
-.billsListFTR{
-  line-height: 95%;
-  text-align: left;
-}
-
 #billsList td, th {
   border-top: thin solid gray;
   padding: 5px;
@@ -233,7 +228,7 @@ body{
   font-size: 25px;
 }
 
-#billHandHH2{
+.billHandHH2{
   color: dimgray;
 }
 
@@ -252,7 +247,7 @@ body{
   background-color: cornflowerblue;
 }
 
-#billsHandleListFTR{
+.billsHandleListFTR{
   line-height: 95%;
   text-align: left;
 }

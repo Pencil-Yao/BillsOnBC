@@ -66,7 +66,7 @@ module.exports = function (logger) {
 			throw proposalResponses;
 		}
 		else {
-			logger.debug('[fcw] Successfully obtained transaction endorsement');
+			logger.debug('[fcw] Successfully obtained transaction endorsement. The message: ', proposalResponses[0].response);
 
 			//call optional endorsement hook
 			if (endorsed_hook) endorsed_hook(null, proposalResponses[0].response);

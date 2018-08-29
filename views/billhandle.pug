@@ -1,7 +1,7 @@
 #billHandleWrap(hidden)
     span#billHH1 票据信息
     br
-    span#billHandHH2 票据状态：
+    span.billHandHH2 票据状态：
         span#billHState OK
     br
     table#billsHandleList
@@ -10,27 +10,33 @@
             th.firstcol TxID
             th 操作业务
             th 操作描述
+            th 操作时间
             th 当前持票人
         tr
             td
             td 票据状态
             td 所属关系
+            td 操作时间
             td 操作
         tr
             td 票据号
             td 票据状态
             td 所属关系
+            td 操作时间
             td 操作
         tr
             td 票据号
             td 票据状态
             td 所属关系
+            td 操作时间
             td 操作
         tr
             td 票据号
             td 票据状态
             td 所属关系
+            td 操作时间
             td 操作
+    span.billHandHH2 票据当前状态
     #billHandleForm
         form(action="/submit" method="POST" onsubmit="return confirm('检查无误，发布票据？')")
             .billAttr

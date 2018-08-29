@@ -14,63 +14,41 @@ import (
 var chaincodeLogger = flogging.MustGetLogger("ChainnovaChaincode")
 // 票据状态
 const (
-	BillInfo_State_NewPublish   = "NewPublish"
-	BillInfo_State_EndrWaitSign = "EndrWaitSign"
-	BillInfo_State_EndrSigned   = "EndrSigned"
-	BillInfo_State_EndrReject   = "EndrReject"
+	BillInfoStateNewPublish   = "NewPublish"
+	BillInfoStateEndrWaitSign = "EndrWaitSign"
+	BillInfoStateEndrSigned   = "EndrSigned"
+	BillInfoStateEndrReject   = "EndrReject"
 )
 
 // 票据key的前缀
-const Bill_Prefix = "Bill_"
+const Bill_Prefix = "b"
 
 // search表的映射名
-const IndexName = "holderName~billNo"
+const IndexName = "holderID_billInfoID"
 
-const HolderIdDayTimeBillTypeBillNoIndexName = "holderId~dayTime-billType-billNo"
-
-// 票据
-//type Bill struct {
-//	BillInfoID string `json:BillInfoID`                //票据号码
-//	BillInfoAmt string `json:BillInfoAmt`              //票据金额
-//	BillInfoType string `json:BillInfoType`            //票据类型
-//	BillInfoIsseDate string `json:BillInfoIsseDate`    //票据出票日期
-//	BillInfoDueDate string `json:BillInfoDueDate`      //票据到期日期
-//	DrwrCmID string `json:DrwrCmID`                    //出票人证件号码
-//	DrwrAcct string `json:DrwrAcct`                    //出票人名称
-//	AccptrCmID string `json:AccptrCmID`                //承兑人证件号码
-//	AccptrAcct string `json:AccptrAcct`                //承兑人名称
-//	PyeeCmID string `json:PyeeCmID`                    //收款人证件号码
-//	PyeeAcct string `json:PyeeAcct`                    //收款人名称
-//	HodrCmID string `json:HodrCmID`                    //持票人证件号码
-//	HodrAcct string `json:HodrAcct`                    //持票人名称
-//	WaitEndorserCmID string `json:WaitEndorserCmID`    //待背书人证件号码
-//	WaitEndorserAcct string `json:WaitEndorserAcct`    //待背书人名称
-//	RejectEndorserCmID string `json:RejectEndorserCmID`//拒绝背书人证件号码
-//	RejectEndorserAcct string `json:RejectEndorserAcct`//拒绝背书人名称
-//	State string `json:State`                          //票据状态
-//	History []HistoryItem `json:History`               //背书历史
-//}
+//const HolderIdDayTimeBillTypeBillNoIndexName = "holderId~dayTime-billType-billNo"
 
 type Bill struct {
-	billInfoID         string        `json:billInfoID`         //票据号码
-	billInfoAmt        string        `json:billInfoAmt`        //票据金额
-	billInfoType       string        `json:billInfoType`       //票据类型
-	billIssueDate      string        `json:billIssueDate`      //票据出票日期
-	billDeadDate       string        `json:billDeadDate`       //票据到期日期
-	issuerName         string        `json:issuerName`         //出票人名称
-	issuerID           string        `json:issuerID`           //出票人证件号
-	acceptorName       string        `json:acceptorName`       //承兑人名称
-	acceptOrID         string        `json:acceptOrID`         //承兑人证件号码
-	payeeName          string        `json:payeeName`          //收款人名称
-	payeeID            string        `json:payeeID`            //收款人证件号码
-	holderName         string        `json:holderName`         //持票人名称
-	holderID           string        `json:holderID`           //持票人证件号码
-	WaitEndorserCmID   string        `json:WaitEndorserCmID`   //待背书人证件号码
-	WaitEndorserAcct   string        `json:WaitEndorserAcct`   //待背书人名称
-	RejectEndorserCmID string        `json:RejectEndorserCmID` //拒绝背书人证件号码
-	RejectEndorserAcct string        `json:RejectEndorserAcct` //拒绝背书人名称
-	State              string        `json:State`              //票据状态
-	History            []HistoryItem `json:History`            //背书历史
+	BillInfoID         string        `json:"billInfoID"`         //票据号码
+	BillInfoAmt        string        `json:"billInfoAmt"`        //票据金额
+	BillInfoType       string        `json:"billInfoType"`       //票据类型
+	BillIssueDate      string        `json:"billIssueDate"`      //票据出票日期
+	BillDeadDate       string        `json:"billDeadDate"`       //票据到期日期
+	IssuerName         string        `json:"issuerName"`         //出票人名称
+	IssuerID           string        `json:"issuerID"`           //出票人证件号
+	AcceptorName       string        `json:"acceptorName"`       //承兑人名称
+	AcceptOrID         string        `json:"acceptOrID"`         //承兑人证件号码
+	PayeeName          string        `json:"payeeName"`          //收款人名称
+	PayeeID            string        `json:"payeeID"`            //收款人证件号码
+	HolderName         string        `json:"holderName"`         //持票人名称
+	HolderID           string        `json:"holderID"`           //持票人证件号码
+	WaitEndorserCmID   string        `json:"WaitEndorserCmID"`   //待背书人证件号码
+	WaitEndorserAcct   string        `json:"WaitEndorserAcct"`   //待背书人名称
+	RejectEndorserCmID string        `json:"RejectEndorserCmID"` //拒绝背书人证件号码
+	RejectEndorserAcct string        `json:"RejectEndorserAcct"` //拒绝背书人名称
+	State              string        `json:"State"`              //票据状态
+	OperateDate				 string				 `json:"operateDate"`				 //操作时间
+	History            []HistoryItem `json:"History"`            //背书历史
 }
 
 // 背书历史item结构
@@ -138,16 +116,16 @@ func (a *BillChaincode) getBill(stub shim.ChaincodeStubInterface, bill_No string
 // 保存票据
 func (a *BillChaincode) putBill(stub shim.ChaincodeStubInterface, bill Bill) ([]byte, bool) {
 
-	byte, err := json.Marshal(bill)
+	billbytes, err := json.Marshal(bill)
 	if err != nil {
 		return nil, false
 	}
 
-	err = stub.PutState(Bill_Prefix+bill.billInfoID, byte)
+	err = stub.PutState(Bill_Prefix+bill.BillInfoID, billbytes)
 	if err != nil {
 		return nil, false
 	}
-	return byte, true
+	return billbytes, true
 }
 
 // chaincode Init 接口
@@ -209,9 +187,8 @@ func (a *BillChaincode) issue(stub shim.ChaincodeStubInterface, args []string) p
 		res := getRetString(1, "ChainnovaChaincode Invoke issue unmarshal failed")
 		return shim.Error(res)
 	}
-	// TODO 根据票号 查找是否票号已存在
-	// TODO 如stat中已有同号票据 返回error message
-	_, existbl := a.getBill(stub, bill.billInfoID)
+
+	_, existbl := a.getBill(stub, bill.BillInfoID)
 	if existbl {
 		res := getRetString(1, "ChainnovaChaincode Invoke issue failed : the billNo has exist ")
 		return shim.Error(res)
@@ -224,36 +201,38 @@ func (a *BillChaincode) issue(stub shim.ChaincodeStubInterface, args []string) p
 	}
 	chaincodeLogger.Infof("%s", timestamp)
 
-	var dayTime = time.Now().Format("2009-10-10")
-
-	resultIterator, err := stub.GetStateByPartialCompositeKey(HolderIdDayTimeBillTypeBillNoIndexName, []string{bill.holderID, dayTime, bill.billInfoID})
-	if err != nil {
-		res := getRetString(1, "ChainnovaChaincode Invoke issue get bill list error")
-		return shim.Error(res)
-	}
-	defer resultIterator.Close()
-
-	var count = 0
-	for resultIterator.HasNext() {
-		_, _ = resultIterator.Next()
-
-		count ++
-
-		if count >= 5 {
-			res := getRetString(1, "ChainnovaChaincode Invoke issue The bill holder has more than 5 bills on the same day by the same type")
-			return shim.Error(res)
-		}
-	}
-
-	holderIdDayTimeBillNoIndexKey, err := stub.CreateCompositeKey(HolderIdDayTimeBillTypeBillNoIndexName, []string{bill.holderID, dayTime, bill.billInfoType, bill.billInfoID})
-	if err != nil {
-		res := getRetString(1, "ChainnovaChaincode Invoke issue put search table failed")
-		return shim.Error(res)
-	}
-	stub.PutState(holderIdDayTimeBillNoIndexKey, []byte(time.Now().Format("2017-11-20 12:56:56")))
+	//记录一天同一票据的修改，修改上限次数5次
+	//var dayTime = time.Now().Format("2009-10-10")
+	//
+	//resultIterator, err := stub.GetStateByPartialCompositeKey(HolderIdDayTimeBillTypeBillNoIndexName, []string{bill.HolderID, dayTime, bill.BillInfoID})
+	//if err != nil {
+	//	res := getRetString(1, "ChainnovaChaincode Invoke issue get bill list error")
+	//	return shim.Error(res)
+	//}
+	//defer resultIterator.Close()
+	//
+	//var count = 0
+	//for resultIterator.HasNext() {
+	//	_, _ = resultIterator.Next()
+	//
+	//	count ++
+	//
+	//	if count >= 5 {
+	//		res := getRetString(1, "ChainnovaChaincode Invoke issue The bill holder has more than 5 bills on the same day by the same type")
+	//		return shim.Error(res)
+	//	}
+	//}
+	//
+	//holderIdDayTimeBillNoIndexKey, err := stub.CreateCompositeKey(HolderIdDayTimeBillTypeBillNoIndexName, []string{bill.HolderID, dayTime, bill.BillInfoType, bill.BillInfoID})
+	//if err != nil {
+	//	res := getRetString(1, "ChainnovaChaincode Invoke issue put search table failed")
+	//	return shim.Error(res)
+	//}
+	//stub.PutState(holderIdDayTimeBillNoIndexKey, []byte(time.Now().Format("2017-11-20 12:56:56")))
 
 	// 更改票据信息和状态并保存票据:票据状态设为新发布
-	bill.State = BillInfo_State_NewPublish
+	bill.State = BillInfoStateNewPublish
+	bill.OperateDate = time.Now().Format("2006-01-02 15:04:05")
 	// 保存票据
 	_, bl := a.putBill(stub, bill)
 	if !bl {
@@ -261,7 +240,8 @@ func (a *BillChaincode) issue(stub shim.ChaincodeStubInterface, args []string) p
 		return shim.Error(res)
 	}
 	// 以持票人ID和票号构造复合key 向search表中保存 value为空即可 以便持票人批量查询
-	holderNameBillNoIndexKey, err := stub.CreateCompositeKey(IndexName, []string{bill.holderID, bill.billInfoID})
+	holderNameBillNoIndexKey, err := stub.CreateCompositeKey(IndexName, []string{bill.HolderID, bill.BillInfoID})
+	chaincodeLogger.Info(holderNameBillNoIndexKey)
 	if err != nil {
 		res := getRetString(1, "ChainnovaChaincode Invoke issue put search table failed")
 		return shim.Error(res)
@@ -269,7 +249,6 @@ func (a *BillChaincode) issue(stub shim.ChaincodeStubInterface, args []string) p
 	stub.PutState(holderNameBillNoIndexKey, []byte{0x00})
 
 	res := getRetByte(0, "invoke issue success")
-	chaincodeLogger.Info("invoke issue success")
 	return shim.Success(res)
 }
 
@@ -287,7 +266,7 @@ func (a *BillChaincode) endorse(stub shim.ChaincodeStubInterface, args []string)
 		return shim.Error(res)
 	}
 
-	if bill.holderID == args[1] {
+	if bill.HolderID == args[1] {
 		res := getRetString(1, "ChainnovaChaincode Invoke endorse failed: Endorser should not be same with current Holder")
 		return shim.Error(res)
 	}
@@ -318,9 +297,9 @@ func (a *BillChaincode) endorse(stub shim.ChaincodeStubInterface, args []string)
 			json.Unmarshal(historyData.Value, &hisBill) //un stringify it aka JSON.parse()
 			hisBill = hisBill                           //copy bill over
 		}
-		hodlerNameList = append(hodlerNameList, hisBill.holderID) //add this tx to the list
+		hodlerNameList = append(hodlerNameList, hisBill.HolderID) //add this tx to the list
 
-		if hisBill.holderID == args[1] {
+		if hisBill.HolderID == args[1] {
 			res := getRetString(1, "ChainnovaChaincode Invoke endorse failed: Endorser should not be the bill history holder")
 			return shim.Error(res)
 		}
@@ -331,7 +310,7 @@ func (a *BillChaincode) endorse(stub shim.ChaincodeStubInterface, args []string)
 	bill.WaitEndorserAcct = args[2]
 	bill.RejectEndorserCmID = ""
 	bill.RejectEndorserAcct = ""
-	bill.State = BillInfo_State_EndrWaitSign
+	bill.State = BillInfoStateEndrWaitSign
 	// 保存票据
 	_, bl = a.putBill(stub, bill)
 	if !bl {
@@ -339,7 +318,7 @@ func (a *BillChaincode) endorse(stub shim.ChaincodeStubInterface, args []string)
 		return shim.Error(res)
 	}
 	// 以待背书人ID和票号构造复合key 向search表中保存 value为空即可 以便待背书人批量查询
-	holderNameBillNoIndexKey, err := stub.CreateCompositeKey(IndexName, []string{bill.WaitEndorserCmID, bill.billInfoID})
+	holderNameBillNoIndexKey, err := stub.CreateCompositeKey(IndexName, []string{bill.WaitEndorserCmID, bill.BillInfoID})
 	if err != nil {
 		res := getRetString(1, "ChainnovaChaincode Invoke endorse put search table failed")
 		return shim.Error(res)
@@ -373,11 +352,11 @@ func (a *BillChaincode) accept(stub shim.ChaincodeStubInterface, args []string) 
 	//stub.DelState(holderNameBillNoIndexKey)
 
 	// 更改票据信息和状态并保存票据: 将前手持票人改为背书人,重置待背书人,票据状态改为背书签收
-	bill.holderID = args[1]
-	bill.holderName = args[2]
+	bill.HolderID = args[1]
+	bill.HolderName = args[2]
 	bill.WaitEndorserCmID = ""
 	bill.WaitEndorserAcct = ""
-	bill.State = BillInfo_State_EndrSigned
+	bill.State = BillInfoStateEndrSigned
 	// 保存票据
 	_, bl = a.putBill(stub, bill)
 	if !bl {
@@ -404,7 +383,7 @@ func (a *BillChaincode) reject(stub shim.ChaincodeStubInterface, args []string) 
 	}
 
 	// 维护search表: 以当前背书人ID和票号构造复合key 从search表中删除该key 以便当前背书人无法再查到该票据
-	holderNameBillNoIndexKey, err := stub.CreateCompositeKey(IndexName, []string{args[1], bill.billInfoID})
+	holderNameBillNoIndexKey, err := stub.CreateCompositeKey(IndexName, []string{args[1], bill.BillInfoID})
 	if err != nil {
 		res := getRetString(1, "ChainnovaChaincode Invoke reject put search table failed")
 		return shim.Error(res)
@@ -416,7 +395,7 @@ func (a *BillChaincode) reject(stub shim.ChaincodeStubInterface, args []string) 
 	bill.WaitEndorserAcct = ""
 	bill.RejectEndorserCmID = args[1]
 	bill.RejectEndorserAcct = args[2]
-	bill.State = BillInfo_State_EndrReject
+	bill.State = BillInfoStateEndrReject
 	// 保存票据
 	_, bl = a.putBill(stub, bill)
 	if !bl {
@@ -442,6 +421,7 @@ func (a *BillChaincode) queryMyBill(stub shim.ChaincodeStubInterface, args []str
 		return shim.Error(res)
 	}
 	defer billsIterator.Close()
+	chaincodeLogger.Info(billsIterator)
 
 	var billList = []Bill{}
 
@@ -461,6 +441,7 @@ func (a *BillChaincode) queryMyBill(stub shim.ChaincodeStubInterface, args []str
 		}
 		billList = append(billList, bill)
 	}
+	chaincodeLogger.Info(billList)
 	// 取得并返回票据数组 
 	b, err := json.Marshal(billList)
 	if err != nil {
@@ -502,7 +483,7 @@ func (a *BillChaincode) queryMyWaitBill(stub shim.ChaincodeStubInterface, args [
 			return shim.Error(res)
 		}
 		// 取得状态为待背书的票据 并且待背书人是当前背书人
-		if bill.State == BillInfo_State_EndrWaitSign && bill.WaitEndorserCmID == args[0] {
+		if bill.State == BillInfoStateEndrWaitSign && bill.WaitEndorserCmID == args[0] {
 			billList = append(billList, bill)
 		}
 	}
@@ -517,7 +498,7 @@ func (a *BillChaincode) queryMyWaitBill(stub shim.ChaincodeStubInterface, args [
 
 // 根据票号取得票据 以及该票据背书历史
 //  0 - Bill_No ;
-func (a *BillChaincode) queryByBillNo(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+func (a *BillChaincode) queryByBillID(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	if len(args) != 1 {
 		res := getRetString(1, "ChainnovaChaincode queryByBillNo args!=1")
 		return shim.Error(res)
@@ -548,7 +529,6 @@ func (a *BillChaincode) queryByBillNo(stub shim.ChaincodeStubInterface, args []s
 
 		var hisItem HistoryItem
 		hisItem.TxId = historyData.TxId             //copy transaction id over
-		json.Unmarshal(historyData.Value, &hisBill) //un stringify it aka JSON.parse()
 		if historyData.Value == nil { //bill has been deleted
 			var emptyBill Bill
 			hisItem.Bill = emptyBill //copy nil marble
@@ -572,7 +552,6 @@ func (a *BillChaincode) queryByBillNo(stub shim.ChaincodeStubInterface, args []s
 func (a *BillChaincode) check(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	var key string
 	var err error
-	chaincodeLogger.Info("starting read")
 
 	if len(args) != 1 {
 		return shim.Error("Incorrect number of arguments. Expecting key of the var to query")
@@ -590,7 +569,6 @@ func (a *BillChaincode) check(stub shim.ChaincodeStubInterface, args []string) p
 		return shim.Error(fmt.Sprintf("Error: Failed to get state for %s", key))
 	}
 
-	chaincodeLogger.Info("- end read")
 	return shim.Success(valAsbytes)
 }
 
@@ -614,8 +592,8 @@ func (a *BillChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 	// query
 	if function == "queryMyBill" {
 		return a.queryMyBill(stub, args)
-	} else if function == "queryByBillNo" {
-		return a.queryByBillNo(stub, args)
+	} else if function == "queryByBillID" {
+		return a.queryByBillID(stub, args)
 	} else if function == "queryMyWaitBill" {
 		return a.queryMyWaitBill(stub, args)
 	}
