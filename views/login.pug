@@ -2,7 +2,9 @@ extends template/layout.pug
 
 
 block custom_header
-    title testlogin
+    script(src='/js/websocket.js?v=' + bag.jshash)
+    script(src='/js/ui_events.js?v=' + bag.jshash)
+    script(src='/js/ui_buiding.js?v=' + bag.jshash)
 
 block navpanel
     // --------------- Navigation Bar  -------------- //
@@ -14,11 +16,16 @@ block content
             span 区块链票据
         br
         br
-        #loginInput
-            input(name="loginUser" type="text" placeholder="UserName").long
-            br
-            input(name="loginKey" type="password" placeholder="UserKey").long
-        #loginButtonCSS
-            button(type="button")#loginButton
-                span.fa.fa-sign-in &nbsp;&nbsp;
-                span 登录
+        form#loginform(method="POST" action="#")
+            #loginInput
+                input(name="username" type="text" placeholder="UserName").long
+                span &nbsp;&nbsp;
+                .tooltip
+                    span.tooltiptext this is tip "hello"
+                    span.fa.fa-question-circle
+                br
+                input(name="userkey" type="password" placeholder="UserKey").long
+            #loginButtonCSS
+                button(type="submit")#loginButton
+                    span.fa.fa-sign-in &nbsp;&nbsp;
+                    span 登录

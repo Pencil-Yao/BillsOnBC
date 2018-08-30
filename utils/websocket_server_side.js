@@ -16,7 +16,15 @@ module.exports = function (cp, fcw, logger) {
 		find_chaincode: { state: 'waiting', step: 'step3' },			// Step 3 - find the chaincode on the channel
 		register_owners: { state: 'waiting', step: 'step4' },			// Step 4 - create the marble owners
 	};
-
+	var know_accounts = [
+    {acName: 'amy'},
+    {acName: 'alice'},
+    {acName: 'ava'}
+  ];
+	for (var i in know_accounts) {
+    gotacID(know_accounts[i]);
+    logger.info(know_accounts[i]);
+  }
 	//--------------------------------------------------------
 	// Setup WS Module
 	//--------------------------------------------------------
@@ -163,7 +171,7 @@ module.exports = function (cp, fcw, logger) {
         issuerName: data.issuerName,
         issuerID: data.issuerID,
         acceptorName: data.acceptorName,
-        acceptOrID: data.acceptOrID,
+        acceptorID: data.acceptorID,
         payeeName: data.payeeName,
         payeeID: data.payeeID,
         holderName: data.holderName,
@@ -172,7 +180,7 @@ module.exports = function (cp, fcw, logger) {
       marbles_lib.issue_a_bill(options, function (err, resp) {
       	if (err != null) send_err(err, data);
         else {
-        	options.ws.send(JSON.stringify({ msg: 'tx_issue', state: 'finished', data: options.args.billInfoID, hdrid: options.args.holderID }));
+        	options.ws.send(JSON.stringify({ msg: 'tx_issue', state: 'finished', data: options.args.billInfoID}));
         }
       });
 		}
@@ -194,7 +202,6 @@ module.exports = function (cp, fcw, logger) {
       };
       marbles_lib.queryByBillID(options, function (err, resp) {
         if (err != null) {
-          console.log('');
           logger.debug('[checking] could not query by bill id:', err);
           var obj = {
             msg: 'error',
@@ -210,6 +217,12 @@ module.exports = function (cp, fcw, logger) {
           options.ws.send(JSON.stringify({msg: 'tx_queryBillID', state: 'finished', data: billWithHistory}));
         }
       });
+    }
+
+    //get user account name and id
+    else if (data.type === 'get_account'){
+      logger.debug('[ac] get user account info req');
+		  options.ws.send(JSON.stringify({msg: 'send_account', data: know_accounts}));
     }
 
 		// send transaction error msg
@@ -403,6 +416,28 @@ module.exports = function (cp, fcw, logger) {
   function leftPad(str, length) {
     for (var i = str.length; i < length; i++) str = '0' + String(str);
     return str;
+  }
+
+  //sanitize the account
+  function gotacID(ac) {
+    if (!ac.acName){
+      logger.error("[ac] initial the account without acName");
+      return
+    }
+    else {
+      var acCode = toASC(ac.acName.toLowerCase());
+      ac.acID = 'CIM' + leftPad(acCode, 15);
+    }
+  }
+
+  function toASC(acname) {
+	  var ascname = '';
+    for(var i=acname.length-1;i>=0;i--){
+      var str = acname.charAt(i);
+      var astr = str.charCodeAt();
+      ascname += astr;
+    }
+    return ascname;
   }
 
 	return ws_server;

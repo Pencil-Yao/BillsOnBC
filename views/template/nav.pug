@@ -1,14 +1,15 @@
-#logo 
-	//img(src="/imgs/logo.png")#logoIcon
-	span 区块链-票据
+#logo
+    //img(src="/imgs/logo.png")#logoIcon
+    span 区块链-票据
 
 
 #whoAmI
-	span.fa.fa-user#userIcon
-	span User1
-	span &nbsp;
-	span.fa.fa-angle-down#carrot
-	
+    span.fa.fa-user#userIcon
+    span#curUser #{user}
+    span &nbsp;
+    span.fa.fa-angle-down#carrot
 
-	#userSelect
-		a(href="/logout").userLine Logout
+
+    #userSelect
+        #triangle
+        a(href="/login").userLine Logout

@@ -19,6 +19,7 @@ var serve_static = require('serve-static');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var http = require('http');
+var bodyParser = require('body-parser');
 var app = express();
 var cors = require('cors');
 var ws = require('ws');											// websocket module
@@ -59,6 +60,8 @@ if (process.env.VCAP_APPLICATION) {
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.use(compression());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(serve_static(path.join(__dirname, 'public')));
 app.use(session({ secret: 'lostmymarbles', resave: true, saveUninitialized: true }));
@@ -204,7 +207,7 @@ function setupWebSocket() {
 			}
 
 			// --- [5] Process the ws message  --- //
-			if (data && data.type == 'setup') {						// its a setup request, enter the setup code
+			if (data && data.type === 'setup') {						// its a setup request, enter the setup code
 				logger.debug('[ws] setup message', data);
 				startup_lib.setup_ws_steps(data);					// <-- open startup_lib.js to view the rest of the start up code
 

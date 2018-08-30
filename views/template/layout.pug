@@ -6,10 +6,11 @@ html
     //ETI Labs
     //Copyright 2016  - IBM
     head
+        title #{title}
         meta(name="viewport" content="initial-scale=1.0, user-scalable=no" charset="UTF-8")
         link(rel="stylesheet" href="/css/font-awesome-4.5.0/css/font-awesome.min.css")
-        link(type="text/css" rel="stylesheet" href="/css/main.css")
-        script(src='/js/util/jquery-2.2.4.min.js')
+        link(type="text/css" rel="stylesheet" href="/css/main.css?v=" + bag.csshash)
+        script(src='/js/util/jquery-2.2.4.min.js?v=' + bag.jshash)
         script(src='/js/util/jquery-ui-1.11.4/jquery-ui.min.js')
         script(type='text/javascript').
             $(document).ready(function () {

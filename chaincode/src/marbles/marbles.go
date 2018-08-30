@@ -37,15 +37,15 @@ type Bill struct {
 	IssuerName         string        `json:"issuerName"`         //出票人名称
 	IssuerID           string        `json:"issuerID"`           //出票人证件号
 	AcceptorName       string        `json:"acceptorName"`       //承兑人名称
-	AcceptOrID         string        `json:"acceptOrID"`         //承兑人证件号码
+	AcceptorID         string        `json:"acceptorID"`         //承兑人证件号码
 	PayeeName          string        `json:"payeeName"`          //收款人名称
 	PayeeID            string        `json:"payeeID"`            //收款人证件号码
 	HolderName         string        `json:"holderName"`         //持票人名称
 	HolderID           string        `json:"holderID"`           //持票人证件号码
-	WaitEndorserCmID   string        `json:"WaitEndorserCmID"`   //待背书人证件号码
-	WaitEndorserAcct   string        `json:"WaitEndorserAcct"`   //待背书人名称
-	RejectEndorserCmID string        `json:"RejectEndorserCmID"` //拒绝背书人证件号码
-	RejectEndorserAcct string        `json:"RejectEndorserAcct"` //拒绝背书人名称
+	WaitEndorserID  	 string        `json:"WaitEndorserID"`   	 //待背书人证件号码
+	WaitEndorserName   string        `json:"WaitEndorserName"`   //待背书人名称
+	RejectEndorserID	 string        `json:"RejectEndorserID"`	 //拒绝背书人证件号码
+	RejectEndorserName string        `json:"RejectEndorserName"` //拒绝背书人名称
 	State              string        `json:"State"`              //票据状态
 	OperateDate				 string				 `json:"operateDate"`				 //操作时间
 	History            []HistoryItem `json:"History"`            //背书历史
@@ -306,10 +306,10 @@ func (a *BillChaincode) endorse(stub shim.ChaincodeStubInterface, args []string)
 	}
 
 	// 更改票据信息和状态并保存票据: 添加待背书人信息,重制已拒绝背书人, 票据状态改为待背书
-	bill.WaitEndorserCmID = args[1]
-	bill.WaitEndorserAcct = args[2]
-	bill.RejectEndorserCmID = ""
-	bill.RejectEndorserAcct = ""
+	bill.WaitEndorserID = args[1]
+	bill.WaitEndorserName = args[2]
+	bill.RejectEndorserID = ""
+	bill.RejectEndorserName = ""
 	bill.State = BillInfoStateEndrWaitSign
 	// 保存票据
 	_, bl = a.putBill(stub, bill)
@@ -318,7 +318,7 @@ func (a *BillChaincode) endorse(stub shim.ChaincodeStubInterface, args []string)
 		return shim.Error(res)
 	}
 	// 以待背书人ID和票号构造复合key 向search表中保存 value为空即可 以便待背书人批量查询
-	holderNameBillNoIndexKey, err := stub.CreateCompositeKey(IndexName, []string{bill.WaitEndorserCmID, bill.BillInfoID})
+	holderNameBillNoIndexKey, err := stub.CreateCompositeKey(IndexName, []string{bill.WaitEndorserID, bill.BillInfoID})
 	if err != nil {
 		res := getRetString(1, "ChainnovaChaincode Invoke endorse put search table failed")
 		return shim.Error(res)
@@ -354,8 +354,8 @@ func (a *BillChaincode) accept(stub shim.ChaincodeStubInterface, args []string) 
 	// 更改票据信息和状态并保存票据: 将前手持票人改为背书人,重置待背书人,票据状态改为背书签收
 	bill.HolderID = args[1]
 	bill.HolderName = args[2]
-	bill.WaitEndorserCmID = ""
-	bill.WaitEndorserAcct = ""
+	bill.WaitEndorserID = ""
+	bill.WaitEndorserName = ""
 	bill.State = BillInfoStateEndrSigned
 	// 保存票据
 	_, bl = a.putBill(stub, bill)
@@ -391,10 +391,10 @@ func (a *BillChaincode) reject(stub shim.ChaincodeStubInterface, args []string) 
 	stub.DelState(holderNameBillNoIndexKey)
 
 	// 更改票据信息和状态并保存票据: 将拒绝背书人改为当前背书人，重置待背书人,票据状态改为背书拒绝
-	bill.WaitEndorserCmID = ""
-	bill.WaitEndorserAcct = ""
-	bill.RejectEndorserCmID = args[1]
-	bill.RejectEndorserAcct = args[2]
+	bill.WaitEndorserID = ""
+	bill.WaitEndorserName = ""
+	bill.RejectEndorserID = args[1]
+	bill.RejectEndorserName = args[2]
 	bill.State = BillInfoStateEndrReject
 	// 保存票据
 	_, bl = a.putBill(stub, bill)
@@ -483,7 +483,7 @@ func (a *BillChaincode) queryMyWaitBill(stub shim.ChaincodeStubInterface, args [
 			return shim.Error(res)
 		}
 		// 取得状态为待背书的票据 并且待背书人是当前背书人
-		if bill.State == BillInfoStateEndrWaitSign && bill.WaitEndorserCmID == args[0] {
+		if bill.State == BillInfoStateEndrWaitSign && bill.WaitEndorserID == args[0] {
 			billList = append(billList, bill)
 		}
 	}

@@ -71,7 +71,7 @@ function connect_to_server() {
       //issue back
       else if (msgObj.msg === 'tx_issue') {
         build_note(msgObj);
-        getBillsByUserID(msgObj.hdrid); //todo independent to invoke
+        // getBillsByUserID(curUser.acID);
       }
 
       //single bill quert
@@ -89,6 +89,27 @@ function connect_to_server() {
         }
       }
 
+      //app startup state
+      else if (msgObj.msg === 'app_state') {
+        ws.send(JSON.stringify({type: 'get_account', version: 1}))
+      }
+
+      //get account info and curUser
+      else  if(msgObj.msg === 'send_account'){
+        console.log(wsTxt + "rec num of accounts: ", msgObj.data.length);
+        know_accounts = msgObj.data;
+        for (var i in know_accounts){
+          acNames[i] = know_accounts[i].acName;
+        }
+        curUser.acName = $('#curUser').html();
+        for (var i =0; i < know_accounts.length; i++) {
+          if (know_accounts[i].acName === curUser.acName) {
+            curUser.acID = know_accounts[i].acID;
+          }
+        }
+        build_actip(acNames);
+      }
+
       //general error
       else if (msgObj.msg === 'error') {
         if (msgObj.e && msgObj.e.parsed) {
@@ -101,7 +122,7 @@ function connect_to_server() {
       }
 
       //unknown
-      else console.log(wsTxt + ' rec', msgObj.msg, msgObj);
+      else console.warn(wsTxt + 'unknow rec', msgObj.msg, msgObj);
     }
     catch (e) {
       console.log(wsTxt + ' error handling a ws message', e);

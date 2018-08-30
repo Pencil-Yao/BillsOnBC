@@ -9,6 +9,8 @@
 var express = require('express');
 var cachebust_js = Date.now();
 var cachebust_css = Date.now();
+var acNames = ['amy', 'alice', 'ava'];
+var userName = '';
 
 module.exports = function (logger, cp) {
 	var app = express();
@@ -23,20 +25,20 @@ module.exports = function (logger, cp) {
 	// ============================================================================================================================
 	// Login
 	// ============================================================================================================================
-	// app.get('/login', function (req, res) {
-	// 	res.render('login', { title: 'Marbles - Login', bag: build_bag(req) });
-	// });
-  //
-	// app.post('/login', function (req, res) {
-	// 	req.session.user = { username: 'Admin' };
-	// 	res.redirect('/home');
-	// });
-  //
-	// app.get('/logout', function (req, res) {
-	// 	req.session.destroy();
-	// 	res.redirect('/login');
-	// });
+	app.get('/login', function (req, res) {
+		res.render('login', { title: 'Bills - Login', bag: build_bag(req) });
+	});
 
+  app.post('/login', function (req, res) {
+    userName = req.body.username;
+    req.session.user = {username: userName};
+    if (acNames.indexOf(userName)>=0){
+      res.redirect('/home');
+    }
+    else {
+      res.redirect('/login');
+    }
+  });
 
 	// ============================================================================================================================
 	// Home
@@ -45,16 +47,13 @@ module.exports = function (logger, cp) {
 		route_me(req, res);
 	});
 
-	// app.get('/create', function (req, res) {
-	// 	route_me(req, res);
-	// });
 
 	function route_me(req, res) {
-		//if (!req.session.user || !req.session.user.username) {		// no session? send them to login
-		//	res.redirect('/login');
-		//} else {
-		res.render('bills', { title: 'BillsOnBC - Home', bag: build_bag(req) });
-		//}
+		if (!req.session.user || !req.session.user.username) {		// no session? send them to login
+			res.redirect('/login');
+		} else {
+		  res.render('bills', { title: 'BillsOnBC - Home', bag: build_bag(req), user: userName });
+		}
 	}
 
 	//anything in here gets passed to the Pug template engine

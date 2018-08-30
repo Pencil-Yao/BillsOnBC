@@ -29,35 +29,51 @@
                         label 出票人名称
                         br
                         input(type="text" name="issuerName" placeholder="输入出票人名称" required="required")
+                        span &nbsp;&nbsp;
+                        .tooltip
+                            span.tooltiptext this is tip "hello"
+                            span.fa.fa-question-circle
                     .singleEntry
                         label 出票人证件号
                         br
-                        input(type="text" name="issuerID" placeholder="输入出票人证件" required="required")
+                        input(type="text" name="issuerID" placeholder="输入出票人证件" required="required" disabled="disabled")
                     .singleEntry
                         label 承兑人名称
                         br
                         input(type="text" name="acceptorName" placeholder="输入承兑人名称" required="required")
+                        span &nbsp;&nbsp;
+                        .tooltip
+                            span.tooltiptext this is tip "hello"
+                            span.fa.fa-question-circle
                     .singleEntry
                         label 承兑人证件号
                         br
-                        input(type="text" name="acceptOrID" placeholder="输入承兑人证件" required="required")
+                        input(type="text" name="acceptorID" placeholder="输入承兑人证件" required="required" disabled="disabled")
                 .submitBillPH
                     .singleEntry
                         label 收款人名称
                         br
                         input(type="text" name="payeeName" placeholder="输入收款人名称" required="required")
+                        span &nbsp;&nbsp;
+                        .tooltip
+                            span.tooltiptext this is tip "hello"
+                            span.fa.fa-question-circle
                     .singleEntry
                         label 收款人证件号
                         br
-                        input(type="text" name="payeeID" placeholder="输入收款人证件" required="required")
+                        input(type="text" name="payeeID" placeholder="输入收款人证件" required="required" disabled="disabled")
                     .singleEntry
                         label 持票人名称
                         br
                         input(type="text" name="holderName" placeholder="输入持票人名称" required="required")
+                        span &nbsp;&nbsp;
+                        .tooltip
+                            span.tooltiptext this is tip "hello"
+                            span.fa.fa-question-circle
                     .singleEntry
                         label 持票人证件号
                         br
-                        input(type="text" name="holderID" placeholder="输入持票人证件" required="required")
+                        input(type="text" name="holderID" placeholder="输入持票人证件" required="required" disabled="disabled")
                     .ButtonEntry
                         button(type="button")#submitButton
                             span.fa.fa-pencil-square-o &nbsp;&nbsp;

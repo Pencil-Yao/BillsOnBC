@@ -58,7 +58,7 @@ function build_billhandle(billData) {
   $('input[name="BHissuerName"]').val(billData.issuerName);
   $('input[name="BHissuerID"]').val(billData.issuerID);
   $('input[name="BHacceptorName"]').val(billData.acceptorName);
-  $('input[name="BHacceptOrID"]').val(billData.acceptOrID);
+  $('input[name="BHacceptOrID"]').val(billData.acceptorID);
   $('input[name="BHpayeeName"]').val(billData.payeeName);
   $('input[name="BHpayeeID"]').val(billData.payeeID);
   $('input[name="BHholderName"]').val(billData.holderName);
@@ -87,5 +87,10 @@ function build_billhandle(billData) {
       </tr>`;
     $('#billsHandleList').append(html);
   }
+}
 
+//build tip info account name
+function build_actip(acnames) {
+  var tiptext = "The account name in the system: " + acnames
+  $('.tooltiptext').html(tiptext);
 }
