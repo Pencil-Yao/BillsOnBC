@@ -9,7 +9,7 @@
 var express = require('express');
 var cachebust_js = Date.now();
 var cachebust_css = Date.now();
-var acNames = ['amy', 'alice', 'ava'];
+var acNames = ['alice', 'jack', 'tom', 'mike', 'fei'];
 var userName = '';
 
 module.exports = function (logger, cp) {

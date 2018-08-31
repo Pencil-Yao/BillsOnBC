@@ -57,12 +57,13 @@ $(document).on('ready', function () {
     }
   });
 
-  $('#lookupBill').click(function () {
+  $('#waitBill').click(function () {
     if (mp_stat !== mainpannel[2]){
       mp_dom.hide();
       $('#lookupbillWrap').show();
       mp_stat = mainpannel[2];
       mp_dom = $('#lookupbillWrap');
+      getWaitBillsByUserID(curUser.acID);
     }
   });
 
@@ -107,7 +108,20 @@ $(document).on('ready', function () {
       billInfoID: billID,
       version: 1
     };
-    console.log('query billID sending', obj)
+    console.log('query billID sending', obj);
+    ws.send(JSON.stringify(obj));
+  });
+
+  //waitbill---------------------------------------------------------------------
+  //wait bill index button
+  $(document).on('click', '.LUbillButton', function () {
+    var billID = $(this).attr('billID');
+    var obj = {
+      type: 'queryByBillID',
+      billInfoID: billID,
+      version: 2
+    };
+    console.log('query billID sending', obj);
     ws.send(JSON.stringify(obj));
   });
 
@@ -116,11 +130,56 @@ $(document).on('ready', function () {
   //close the pannel
   $('#BHbuttonClose').click(function () {
     $('#billHandleWrap').fadeOut();
+    $('#BHusedtohidden').fadeOut();
+    $('#BHbuttonEndorse').fadeOut();
+    $('#BHbuttonAccept').fadeOut();
+    $('#BHbuttonReject').fadeOut();
+  });
+
+  $('#BHbuttonEndorse').click(function () {
+    console.log("endorse bill");
+    var obj = {
+      type: 'endorse',
+      billInfoID: $('input[name="BHbillInfoID"]').val(),
+      waitEndorserName: $('input[name="BHendorseeName"]').val(),
+      waitEndorserID: $('input[name="BHendorseeID"]').val(),
+      version: 1
+    }
+    console.log("Endorse bill, sending ", obj)
+    ws.send(JSON.stringify(obj));
+  //  todo loading step
+  });
+
+  $('#BHbuttonAccept').click(function () {
+    console.log("accept bill");
+    var obj = {
+      type: "accept",
+      billInfoID: $('input[name="BHbillInfoID"]').val(),
+      endorseeName: curUser.acName,
+      endorseeID: curUser.acID
+    };
+    console.log("Accept bill, sending ", obj)
+    ws.send(JSON.stringify(obj));
+    //  todo loading step
+  });
+
+  $('#BHbuttonReject').click(function () {
+    console.log("reject bill");
+    var obj = {
+      type: "reject",
+      billInfoID: $('input[name="BHbillInfoID"]').val(),
+      endorseeName: curUser.acName,
+      endorseeID: curUser.acID
+    };
+    console.log("Reject bill, sending ", obj)
+    ws.send(JSON.stringify(obj));
+    //  todo loading step
   });
 
   //submitbill---------------------------------------------------------------------
   //issuer's id autofill
   $('input[name="issuerName"]').bind('input propertychange', function () {
+    $('input[name="issuerID"]').val('');
     var isrName = $('input[name="issuerName"]').val();
     if (acNames.indexOf(isrName) >= 0) {
       for (var i =0; i < know_accounts.length; i++) {
@@ -133,6 +192,7 @@ $(document).on('ready', function () {
 
   //acceptor's id autofill
   $('input[name="acceptorName"]').bind('input propertychange', function () {
+    $('input[name="acceptorID"]').val('');
     var acrName = $('input[name="acceptorName"]').val();
     if (acNames.indexOf(acrName) >= 0) {
       for (var i =0; i < know_accounts.length; i++) {
@@ -145,6 +205,7 @@ $(document).on('ready', function () {
 
   //payee's id autofill
   $('input[name="payeeName"]').bind('input propertychange', function () {
+    $('input[name="payeeID"]').val('');
     var paeName = $('input[name="payeeName"]').val();
     if (acNames.indexOf(paeName) >= 0) {
       for (var i =0; i < know_accounts.length; i++) {
@@ -157,11 +218,25 @@ $(document).on('ready', function () {
 
   //holder's id autofill
   $('input[name="holderName"]').bind('input propertychange', function () {
+    $('input[name="holderID"]').val('');
     var horName = $('input[name="holderName"]').val();
     if (acNames.indexOf(horName) >= 0) {
       for (var i =0; i < know_accounts.length; i++) {
         if (know_accounts[i].acName === horName) {
           $('input[name="holderID"]').val(know_accounts[i].acID);
+        }
+      }
+    }
+  });
+
+  //endorsee's id autofill
+  $('input[name="BHendorseeName"]').bind('input propertychange', function () {
+    $('input[name="BHendorseeID"]').val('');
+    var horName = $('input[name="BHendorseeName"]').val();
+    if (acNames.indexOf(horName) >= 0) {
+      for (var i =0; i < know_accounts.length; i++) {
+        if (know_accounts[i].acName === horName) {
+          $('input[name="BHendorseeID"]').val(know_accounts[i].acID);
         }
       }
     }

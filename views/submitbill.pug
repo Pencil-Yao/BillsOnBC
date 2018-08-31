@@ -19,11 +19,11 @@
                     .singleEntry
                         label 票据出票日期
                         br
-                        input(type="text" name="billIssueDate" placeholder="输入出票日期" required="required")
+                        input(type="date" name="billIssueDate" placeholder="输入出票日期" required="required")
                     .singleEntry
                         label 票据到期日期
                         br
-                        input(type="text" name="billDeadDate" placeholder="输入到期日期" required="required")
+                        input(type="date" name="billDeadDate" placeholder="输入到期日期" required="required")
                 .submitBillIA
                     .singleEntry
                         label 出票人名称
@@ -79,6 +79,6 @@
                             span.fa.fa-pencil-square-o &nbsp;&nbsp;
                             span 提交
                         span &nbsp;&nbsp;
-                        button(type="button")#clearButton
+                        button(type="reset")#clearButton
                             span.fa.fa-eraser &nbsp;&nbsp;
                             span 清除

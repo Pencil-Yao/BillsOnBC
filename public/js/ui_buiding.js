@@ -1,6 +1,7 @@
 
 
 var billsList = [];
+var waitBillsList = [];
 
 // =================================================================================
 //	UI Building
@@ -8,13 +9,11 @@ var billsList = [];
 //build note
 function build_note(msg) {
   $('#noteWrap').fadeIn();
-  if(msg.msg === "tx_issue") {
-    if(msg.state === "finished") {
-      var h1Html = "票据发布成功";
-      $('#noteH1').html(h1Html);
-      var txHtml = msg.data;
-      $('#noteTxId').html(txHtml);
-    }
+  if(msg.state === "finished") {
+    var h1Html = msg.content;
+    $('#noteH1').html(h1Html);
+    var txHtml = msg.data;
+    $('#noteTxId').html(txHtml);
   }
 }
 
@@ -38,11 +37,39 @@ function build_user_bills(userBills){
     console.log('[ui] building user bill ' + bill.billInfoID);
     html += `<tr billIndex="`+ bill.billInfoID + `">
         <td>` + bill.billInfoID + `</td>
-        <td>` + bill.State + `</td>
+        <td>` + bill.state + `</td>
         <td>TBD</td>
         <td><button type="button" class="billButton" billIndex="` + i + `" billID="` + bill.billInfoID + `">详情</button></td>
       </tr>`;
     $('#billsList').append(html);
+  }
+}
+
+//build user waitbills wrap
+function build_user_wait_bills(userWaitBills){
+  waitBillsList = userWaitBills;
+  //reset
+  console.log('[ui] clearing all user wait bills');
+  $('#LUbillsList').html('');
+  var htmlTableHead = `<caption id="LUbillsListCaption">票据列表</caption>
+    <tr class="billsListFTR">
+      <th>票据号</th>
+      <th>票据状态</th>
+      <th>所属关系</th>
+      <th>操作</th>
+    </tr>`;
+  $('#LUbillsList').append(htmlTableHead);
+  for (var i = 0; i < waitBillsList.length; i++){
+    var html = '';
+    var bill = waitBillsList[i];
+    console.log('[ui] building user wait bill ' + bill.billInfoID);
+    html += `<tr billIndex="`+ bill.billInfoID + `">
+        <td>` + bill.billInfoID + `</td>
+        <td>` + bill.state + `</td>
+        <td>TBD</td>
+        <td><button type="button" class="LUbillButton" billIndex="` + i + `" billID="` + bill.billInfoID + `">详情</button></td>
+      </tr>`;
+    $('#LUbillsList').append(html);
   }
 }
 
@@ -74,13 +101,13 @@ function build_billhandle(billData) {
       <th>当前持票人</th>
     </tr>`;
   $('#billsHandleList').append(htmlTableHead);
-  for (var i = 0; i < billData.History.length; i++){
+  for (var i = 0; i < billData.history.length; i++){
     var html = '';
-    var billHis = billData.History[i];
+    var billHis = billData.history[i];
     console.log('[ui] building bill history table ' + billData.billInfoID);
     html += `<tr>
         <td>` + billHis.txId + `</td>
-        <td>` + billHis.bill.State + `</td>   
+        <td>` + billHis.bill.state + `</td>   
         <td>TBD</td>
         <td>` + billHis.bill.operateDate + `</td>
         <td>` + billHis.bill.holderID + `</td>

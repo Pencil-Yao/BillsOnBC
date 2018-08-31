@@ -98,7 +98,7 @@
                         input(type="text" name="BHholderID" disabled="disabled")
     select(name="操作选择")#BHselectCommand
         option(value="")
-    #BHusedtohidden(hidden)
+    #BHusedtohidden
         #BHaddtionWrap
             #BHaddtionAttr
                 .BHadttionLeft
@@ -106,14 +106,26 @@
                     br
                     label 背书人名称
                     br
-                    input(type="text" name="BHendorseeACCT" placeholder="填入被背书人名称")
+                    input(type="text" name="BHendorseeName" placeholder="填入被背书人名称")
                 .BHadttionRight
                     br
                     label 背书人证件号
                     br
-                    input(type="text" name="BHendorseeID" placeholder="填入被背书人名称")
+                    input(type="text" name="BHendorseeID" disabled="disabled")
 
     #BHbuttonwrap
+        button(type="button")#BHbuttonEndorse
+            span.fa.fa-arrow-circle-up &nbsp;&nbsp;
+            span 发起背书
+        span &nbsp;&nbsp;
+        button(type="button")#BHbuttonAccept
+            span.fa.fa-check-circle &nbsp;&nbsp;
+            span 签收背书
+        span &nbsp;&nbsp;
+        button(type="button")#BHbuttonReject
+            span.fa.fa-ban &nbsp;&nbsp;
+            span 拒绝背书
+        span &nbsp;&nbsp;
         button(type="button")#BHbuttonClose
             span.fa.fa-close &nbsp;&nbsp;
             span 关闭

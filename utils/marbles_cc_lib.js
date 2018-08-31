@@ -341,9 +341,7 @@ module.exports = function (enrollObj, g_options, fcw, logger) {
   //Bill ----------------------------------------------------------------------------------
   //issue a bill
   marbles_chaincode.issue_a_bill = function (options, cb) {
-    console.log('');
     logger.info('Issuing a bill...');
-
     var opts = {
       peer_urls: g_options.peer_urls,
       peer_tls_opts: g_options.peer_tls_opts,
@@ -359,11 +357,90 @@ module.exports = function (enrollObj, g_options, fcw, logger) {
     fcw.invoke_chaincode(enrollObj, opts, function (err, resp) {
       if (cb) {
         if (!resp) resp = {};
-        resp.id = opts.cc_args[0];			//pass marble id back
         cb(err, resp);
       }
     });
   };
+  //endorse a bill
+  marbles_chaincode.endorse_a_bill = function (options, cb) {
+    logger.info('Endorse a bill...');
+    var opts = {
+      peer_urls: g_options.peer_urls,
+      peer_tls_opts: g_options.peer_tls_opts,
+      channel_id: g_options.channel_id,
+      chaincode_id: g_options.chaincode_id,
+      chaincode_version: g_options.chaincode_version,
+      event_urls: g_options.event_urls,
+      endorsed_hook: options.endorsed_hook,
+      ordered_hook: options.ordered_hook,
+      cc_function: 'endorse',
+      cc_args: [
+      	options.args.billInfoID,
+				options.args.waitEndorserID,
+				options.args.waitEndorserName
+			],
+    };
+    fcw.invoke_chaincode(enrollObj, opts, function (err, resp) {
+      if (cb) {
+        if (!resp) resp = {};
+        cb(err, resp);
+      }
+    });
+  };
+  //accept a bill
+  marbles_chaincode.accept_a_bill = function (options, cb) {
+    logger.info('Accept a bill...');
+    var opts = {
+      peer_urls: g_options.peer_urls,
+      peer_tls_opts: g_options.peer_tls_opts,
+      channel_id: g_options.channel_id,
+      chaincode_id: g_options.chaincode_id,
+      chaincode_version: g_options.chaincode_version,
+      event_urls: g_options.event_urls,
+      endorsed_hook: options.endorsed_hook,
+      ordered_hook: options.ordered_hook,
+      cc_function: 'accept',
+      cc_args: [
+        options.args.billInfoID,
+        options.args.endorseeID,
+        options.args.endorseeName
+      ],
+    };
+    fcw.invoke_chaincode(enrollObj, opts, function (err, resp) {
+      if (cb) {
+        if (!resp) resp = {};
+        cb(err, resp);
+      }
+    });
+  };
+  //accept a bill
+  marbles_chaincode.reject_a_bill = function (options, cb) {
+    logger.info('Reject a bill...');
+    var opts = {
+      peer_urls: g_options.peer_urls,
+      peer_tls_opts: g_options.peer_tls_opts,
+      channel_id: g_options.channel_id,
+      chaincode_id: g_options.chaincode_id,
+      chaincode_version: g_options.chaincode_version,
+      event_urls: g_options.event_urls,
+      endorsed_hook: options.endorsed_hook,
+      ordered_hook: options.ordered_hook,
+      cc_function: 'reject',
+      cc_args: [
+        options.args.billInfoID,
+        options.args.endorseeID,
+        options.args.endorseeName
+      ],
+    };
+    fcw.invoke_chaincode(enrollObj, opts, function (err, resp) {
+      if (cb) {
+        if (!resp) resp = {};
+        cb(err, resp);
+      }
+    });
+  };
+
+
   //query bills list by userID
   marbles_chaincode.queryByUserID = function (options, cb) {
     logger.info('Query by User ID...');
@@ -391,6 +468,21 @@ module.exports = function (enrollObj, g_options, fcw, logger) {
       chaincode_id: g_options.chaincode_id,
       cc_function: 'queryByBillID',
       cc_args: [options.args.billInfoID]
+    };
+    fcw.query_chaincode(enrollObj, opts, cb);
+  };
+  //query bills list by endorseeID
+  marbles_chaincode.queryMyWaitBill = function (options, cb) {
+    logger.info('Query Wait Bill by Endorsee ID...');
+
+    var opts = {
+      peer_urls: g_options.peer_urls,
+      peer_tls_opts: g_options.peer_tls_opts,
+      channel_id: g_options.channel_id,
+      chaincode_version: g_options.chaincode_version,
+      chaincode_id: g_options.chaincode_id,
+      cc_function: 'queryMyWaitBill',
+      cc_args: [options.args.edreeID]
     };
     fcw.query_chaincode(enrollObj, opts, cb);
   };

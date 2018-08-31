@@ -17,9 +17,11 @@ module.exports = function (cp, fcw, logger) {
 		register_owners: { state: 'waiting', step: 'step4' },			// Step 4 - create the marble owners
 	};
 	var know_accounts = [
-    {acName: 'amy'},
     {acName: 'alice'},
-    {acName: 'ava'}
+    {acName: 'jack'},
+    {acName: 'tom'},
+    {acName: 'mike'},
+    {acName: 'fei'}
   ];
 	for (var i in know_accounts) {
     gotacID(know_accounts[i]);
@@ -77,88 +79,6 @@ module.exports = function (cp, fcw, logger) {
 			return;
 		}
 
-		// create a new marble
-		if (data.type === 'create') {
-			logger.info('[ws] create marbles req');
-			options.args = {
-				color: data.color,
-				size: data.size,
-				marble_owner: data.username,
-				owners_company: data.company,
-				owner_id: data.owner_id,
-				auth_company: process.env.marble_company,
-			};
-
-			marbles_lib.create_a_marble(options, function (err, resp) {
-				if (err != null) send_err(err, data);
-				else options.ws.send(JSON.stringify({ msg: 'tx_step', state: 'finished' }));
-			});
-		}
-
-		// transfer a marble
-		else if (data.type === 'transfer_marble') {
-			logger.info('[ws] transferring req');
-			options.args = {
-				marble_id: data.id,
-				owner_id: data.owner_id,
-				auth_company: process.env.marble_company
-			};
-
-			marbles_lib.set_marble_owner(options, function (err, resp) {
-				if (err != null) send_err(err, data);
-				else options.ws.send(JSON.stringify({ msg: 'tx_step', state: 'finished' }));
-			});
-		}
-
-		// delete marble
-		else if (data.type === 'delete_marble') {
-			logger.info('[ws] delete marble req');
-			options.args = {
-				marble_id: data.id,
-				auth_company: process.env.marble_company
-			};
-
-			marbles_lib.delete_marble(options, function (err, resp) {
-				if (err != null) send_err(err, data);
-				else options.ws.send(JSON.stringify({ msg: 'tx_step', state: 'finished' }));
-			});
-		}
-
-		// get all owners, marbles, & companies
-		else if (data.type === 'read_everything') {
-			logger.info('[ws] read everything req');
-			ws_server.check_for_updates(ws);
-		}
-
-		// get history of marble
-		else if (data.type === 'audit') {
-			if (data.marble_id) {
-				logger.info('[ws] audit history');
-				options.args = {
-					id: data.marble_id,
-				};
-				marbles_lib.get_history(options, function (err, resp) {
-					if (err != null) send_err(err, resp);
-					else options.ws.send(JSON.stringify({ msg: 'history', data: resp }));
-				});
-			}
-		}
-
-		// disable marble owner
-		else if (data.type === 'disable_owner') {
-			if (data.owner_id) {
-				logger.info('[ws] disable owner');
-				options.args = {
-					owner_id: data.owner_id,
-					auth_company: process.env.marble_company
-				};
-				marbles_lib.disable_owner(options, function (err, resp) {
-					if (err != null) send_err(err, resp);
-					else options.ws.send(JSON.stringify({ msg: 'tx_step', state: 'finished' }));
-				});
-			}
-		}
-
 		//issue bill
 		else if (data.type === 'issue'){
       logger.info('[ws] issue bill req');
@@ -185,14 +105,103 @@ module.exports = function (cp, fcw, logger) {
       });
 		}
 
+    //endorse bill
+    else if (data.type === 'endorse') {
+      logger.debug("[ws] endorse bill req");
+      options.args = {
+        billInfoID: data.billInfoID,
+        waitEndorserID: data.waitEndorserID,
+        waitEndorserName: data.waitEndorserName
+      }
+      marbles_lib.endorse_a_bill(options, function (err, resp) {
+        if (err != null) send_err(err, data);
+        else {
+          options.ws.send(JSON.stringify({ msg: 'tx_endorse', state: 'finished', data: options.args.billInfoID}));
+        }
+      });
+    }
+
+    //endorse bill
+    else if (data.type === 'accept') {
+      logger.debug("[ws] accept bill req");
+      options.args = {
+        billInfoID: data.billInfoID,
+        endorseeID: data.endorseeID,
+        endorseeName: data.endorseeName
+      }
+      marbles_lib.accept_a_bill(options, function (err, resp) {
+        if (err != null) send_err(err, data);
+        else {
+          options.ws.send(JSON.stringify({ msg: 'tx_accept', state: 'finished', data: options.args.billInfoID}));
+        }
+      });
+    }
+
+    //endorse bill
+    else if (data.type === 'reject') {
+      logger.debug("[ws] reject bill req");
+      options.args = {
+        billInfoID: data.billInfoID,
+        endorseeID: data.endorseeID,
+        endorseeName: data.endorseeName
+      }
+      marbles_lib.reject_a_bill(options, function (err, resp) {
+        if (err != null) send_err(err, data);
+        else {
+          options.ws.send(JSON.stringify({ msg: 'tx_reject', state: 'finished', data: options.args.billInfoID}));
+        }
+      });
+    }
+
 		//query by uerID
 		else if(data.type === 'queryByUserID'){
       logger.info('[ws] query by userID req');
       options.args = {
         holderID: data.hdrid
       };
-      ws_server.check_for_updates(ws, options);
+      marbles_lib.queryByUserID(options, function (err, resp) {
+        if (err != null) {
+          logger.debug('[checking] could not query by holder id:', err);
+          var obj = {
+            msg: 'error',
+            e: err,
+          };
+          options.ws.send(JSON.stringify(obj)); 								//send to a client
+        }
+        else {
+          var billWithHistory = resp.parsed;
+          if (billWithHistory) {
+            logger.debug('[checking] queryByUserID lookup bill: ', billWithHistory);
+          }
+          options.ws.send(JSON.stringify({ msg: 'everything', state: "finished", data: billWithHistory }));
+        }
+      });
 		}
+
+    //query wait bill by uerID
+    else if(data.type === 'queryMyWaitBill'){
+      logger.info('[ws] query wait bill by userID req');
+      options.args = {
+        edreeID: data.edree
+      };
+      marbles_lib.queryMyWaitBill(options, function (err, resp) {
+        if (err != null) {
+          logger.debug('[checking] could not query by bill id:', err);
+          var obj = {
+            msg: 'error',
+            e: err,
+          };
+          options.ws.send(JSON.stringify(obj)); 								//send to a client
+        }
+        else {
+          var billWithHistory = resp.parsed;
+          if (billWithHistory) {
+            logger.debug('[checking] queryMyWaitBill wait bill: ', billWithHistory);
+          }
+          options.ws.send(JSON.stringify({msg: 'tx_queryWaitBill', state: 'finished', data: billWithHistory}));
+        }
+      });
+    }
 
 		//query by billID
     else if(data.type === 'queryByBillID'){
@@ -212,9 +221,13 @@ module.exports = function (cp, fcw, logger) {
         else {
           var billWithHistory = resp.parsed;
           if (billWithHistory) {
-            logger.debug('[checking] lookup bill: ', billWithHistory);
+            logger.debug('[checking] queryByBillID lookup bill: ', billWithHistory);
           }
-          options.ws.send(JSON.stringify({msg: 'tx_queryBillID', state: 'finished', data: billWithHistory}));
+          if (data.version === 1) {
+          	options.ws.send(JSON.stringify({msg: 'tx_queryBillID', state: 'finished', data: billWithHistory}));
+          } else if (data.version === 2) {
+            options.ws.send(JSON.stringify({msg: 'tx_queryWaitBillID', state: 'finished', data: billWithHistory}));
+					}
         }
       });
     }
@@ -358,46 +371,6 @@ module.exports = function (cp, fcw, logger) {
 				if (cb) cb();
 			}
 		});
-	}
-
-	// organize the marble owner list
-	function organize_usernames(data) {
-		var ownerList = [];
-		var myUsers = [];
-		for (var i in data) {						//lets reformat it a bit, only need 1 peer's response
-			var temp = {
-				id: data[i].id,
-				username: data[i].username,
-				company: data[i].company
-			};
-			if (temp.company === process.env.marble_company) {
-				myUsers.push(temp);					//these are my companies users
-			}
-			else {
-				ownerList.push(temp);				//everyone else
-			}
-		}
-
-		ownerList = sort_usernames(ownerList);
-		ownerList = myUsers.concat(ownerList);		//my users are first, bring in the others
-		return ownerList;
-	}
-
-	//
-	function organize_marbles(allMarbles) {
-		var ret = {};
-		for (var i in allMarbles) {
-			if (!ret[allMarbles[i].owner.username]) {
-				ret[allMarbles[i].owner.username] = {
-					owner_id: allMarbles[i].owner.id,
-					username: allMarbles[i].owner.username,
-					company: allMarbles[i].owner.company,
-					marbles: []
-				};
-			}
-			ret[allMarbles[i].owner.username].marbles.push(allMarbles[i]);
-		}
-		return ret;
 	}
 
 	// alpha sort everyone else
