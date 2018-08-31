@@ -289,7 +289,7 @@ body{
 
 #billsHandleList td.firstcol{
   word-wrap: break-word;
-  max-width: 150px;
+  width: 300px;
 }
 
 #billHandleForm{

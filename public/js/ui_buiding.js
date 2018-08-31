@@ -2,6 +2,10 @@
 
 var billsList = [];
 var waitBillsList = [];
+const BillInfoStateNewPublish   = "NewPublish";
+const BillInfoStateEndrWaitSign = "EndrWaitSign";
+const BillInfoStateEndrSigned   = "EndrSigned";
+const BillInfoStateEndrReject   = "EndrReject";
 
 // =================================================================================
 //	UI Building
@@ -9,7 +13,12 @@ var waitBillsList = [];
 //build note
 function build_note(msg) {
   $('#noteWrap').fadeIn();
-  if(msg.state === "finished") {
+  if (msg.e) {
+    var h1Html = msg.content;
+    $('#noteH1').html(h1Html);
+    var txHtml = msg.e;
+    $('#noteTxId').html(txHtml);
+  }else if(msg.state === "finished") {
     var h1Html = msg.content;
     $('#noteH1').html(h1Html);
     var txHtml = msg.data;
@@ -38,7 +47,7 @@ function build_user_bills(userBills){
     html += `<tr billIndex="`+ bill.billInfoID + `">
         <td>` + bill.billInfoID + `</td>
         <td>` + bill.state + `</td>
-        <td>TBD</td>
+        <td>A公司</td>
         <td><button type="button" class="billButton" billIndex="` + i + `" billID="` + bill.billInfoID + `">详情</button></td>
       </tr>`;
     $('#billsList').append(html);
@@ -66,7 +75,7 @@ function build_user_wait_bills(userWaitBills){
     html += `<tr billIndex="`+ bill.billInfoID + `">
         <td>` + bill.billInfoID + `</td>
         <td>` + bill.state + `</td>
-        <td>TBD</td>
+        <td>A公司 </td>
         <td><button type="button" class="LUbillButton" billIndex="` + i + `" billID="` + bill.billInfoID + `">详情</button></td>
       </tr>`;
     $('#LUbillsList').append(html);
@@ -94,7 +103,7 @@ function build_billhandle(billData) {
   $('#billsHandleList').html('');
   var htmlTableHead = `<caption id="billsHandleListCaption">历史流转信息</caption>
     <tr class="billsHandleListFTR">
-      <th class="firstcol">TxID</th>
+      <th>TxID</th>
       <th>操作业务</th>
       <th>操作描述</th>
       <th>操作时间</th>
@@ -104,13 +113,15 @@ function build_billhandle(billData) {
   for (var i = 0; i < billData.history.length; i++){
     var html = '';
     var billHis = billData.history[i];
+    var htmlstate = '';
+    htmlstate = build_state(billHis.bill);
     console.log('[ui] building bill history table ' + billData.billInfoID);
     html += `<tr>
-        <td>` + billHis.txId + `</td>
+        <td class="firstcol">` + "0x" + billHis.txId + `</td>
         <td>` + billHis.bill.state + `</td>   
-        <td>TBD</td>
+        <td>` + htmlstate + `</td>
         <td>` + billHis.bill.operateDate + `</td>
-        <td>` + billHis.bill.holderID + `</td>
+        <td>` + billHis.bill.holderID + "(" + billHis.bill.holderName + ")" + `</td>
       </tr>`;
     $('#billsHandleList').append(html);
   }
@@ -118,6 +129,18 @@ function build_billhandle(billData) {
 
 //build tip info account name
 function build_actip(acnames) {
-  var tiptext = "The account name in the system: " + acnames
+  var tiptext = "The account name in the system: " + acnames;
   $('.tooltiptext').html(tiptext);
+}
+
+function build_state(bill) {
+  if (bill.state === BillInfoStateNewPublish) {
+    return bill.issuerName + "向" + bill.holderName + "发布票据";
+  } else if (bill.state === BillInfoStateEndrSigned) {
+    return bill.holderName + "签收票据";
+  } else if (bill.state === BillInfoStateEndrReject) {
+    return bill.rejectEndorserName + "拒绝" + bill.holderName + "的背书票据";
+  } else if (bill.state === BillInfoStateEndrWaitSign) {
+    return bill.holderName + "的票据背书等待" + bill.waitEndorserName + "签收";
+  }
 }

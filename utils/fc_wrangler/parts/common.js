@@ -18,19 +18,16 @@ module.exports = function (logger) {
 		};
 		try {
 			if (typeof error_message === 'object') {
-				temp.parsed = error_message[0].toString();
+				temp.parsed = error_message[0].response.message;
 			} else {
-				temp.parsed = error_message.toString();
+				temp.parsed = error_message.response.message;
 			}
-			let pos = temp.parsed.lastIndexOf('::');
-			if (pos === -1) pos = temp.parsed.lastIndexOf(':');
-			if (pos >= 0) temp.parsed = temp.parsed.substring(pos + 2);
 		}
 		catch (e) {
 			logger.error('[fcw] could not format error');
 		}
 		temp.parsed = 'Blockchain network error - ' + temp.parsed;
-		return temp;
+		return temp.parsed;
 	};
 
 	//-----------------------------------------------------------------
@@ -66,7 +63,7 @@ module.exports = function (logger) {
 			throw proposalResponses;
 		}
 		else {
-			logger.debug('[fcw] Successfully obtained transaction endorsement. The message: ', proposalResponses[0].response);
+			logger.debug('[fcw] Successfully obtained transaction endorsement.');
 
 			//call optional endorsement hook
 			if (endorsed_hook) endorsed_hook(null, proposalResponses[0].response);

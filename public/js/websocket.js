@@ -123,11 +123,11 @@ function connect_to_server() {
 
       else if (msgObj.msg === 'tx_error') {
         if (msgObj.e) {
-          var err_msg = (msgObj.e.parsed) ? msgObj.e.parsed : msgObj.e;
           // addshow_notification(build_notification(true, escapeHtml(err_msg)), true);
           // $('#txStoryErrorTxt').html(err_msg);
           // $('#txStoryErrorWrap').show();
-          console.log(msgObj.e);
+          msgObj.content = '发生异常';
+          build_note(msgObj);
         }
       }
 

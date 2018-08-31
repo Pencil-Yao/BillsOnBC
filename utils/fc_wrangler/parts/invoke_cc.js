@@ -98,6 +98,7 @@ module.exports = function (g_options, logger) {
 			}
 
 			var formatted = common.format_error_msg(err);
+			console.log(formatted);
 			if (options.ordered_hook) options.ordered_hook('failed', formatted);
 
 			if (cb) return cb(formatted, null);

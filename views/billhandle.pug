@@ -104,12 +104,16 @@
                 .BHadttionLeft
                     span 若发起背书请填写被背书人信息：
                     br
-                    label 背书人名称
+                    label 被背书人名称
                     br
                     input(type="text" name="BHendorseeName" placeholder="填入被背书人名称")
+                    span &nbsp;&nbsp;
+                    .tooltip
+                        span.tooltiptext this is tip "hello"
+                        span.fa.fa-question-circle
                 .BHadttionRight
                     br
-                    label 背书人证件号
+                    label 被背书人证件号
                     br
                     input(type="text" name="BHendorseeID" disabled="disabled")
 
