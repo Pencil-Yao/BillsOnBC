@@ -16,9 +16,6 @@ module.exports = function (config_filename, logger) {
 	var detect_env = require('./parts/detect_env.js')(logger);
 	var misc = require('../misc.js')(logger);
 
-	if (!config_filename) {
-		config_filename = 'marbles_tls.json';										// default config file name
-	}
 	cp.config_path = path.join(__dirname, '../../config/' + config_filename);
 	cp.config = require(cp.config_path);											// load the config file
 	logger.info('Loaded config file', cp.config_path);								// path to config file

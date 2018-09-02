@@ -161,19 +161,6 @@ module.exports = function (logger, cp, fcw, marbles_lib, ws_server) {
 				console.log('\n----------------------------- Chaincode found on channel "' + cp.getChannelId() + '" -----------------------------\n');
 				cc_detect_attempt = 0;			// reset
         if (cb) cb(null);
-
-				// --- Check Chaincode Compatibility  --- //
-				// marbles_lib.check_version(options, function (err, resp) {
-				// 	if (cp.errorWithVersions(resp)) {								// incompatible cc w/app
-				// 		ws_server.record_state('find_chaincode', 'failed');
-				// 		ws_server.broadcast_state();
-				// 	} else {														// compatible cc w/app
-				// 		logger.info('Chaincode version is good');
-				// 		ws_server.record_state('find_chaincode', 'success');
-				// 		ws_server.broadcast_state();
-				// 		if (cb) cb(null);
-				// 	}
-				// });
 			}
 		});
 	};
@@ -196,109 +183,6 @@ module.exports = function (logger, cp, fcw, marbles_lib, ws_server) {
 				if (cb) cb(null);
 			}
 		});
-	};
-
-	// Create marbles and marble owners, owners first
-	startup_lib.create_assets = function (build_marbles_users) {
-		build_marbles_users = misc.saferNames(build_marbles_users);
-		logger.info('Creating marble owners and marbles');
-		var owners = [];
-
-		if (build_marbles_users && build_marbles_users.length > 0) {
-			async.each(build_marbles_users, function (username, owner_cb) {
-				logger.debug('- creating marble owner: ', username);
-
-				// --- Create Each User --- //
-				startup_lib.create_owners(0, username, function (errCode, resp) {
-					owners.push({ id: resp.id, username: username });
-					owner_cb();
-				});
-
-			}, function (err) {
-				logger.info('finished creating owners, now for marbles');
-				if (err == null) {
-
-					var marbles = [];
-					var marblesEach = 3;												//number of marbles each owner gets
-					for (var i in owners) {
-						for (var x = 0; x < marblesEach; x++) {
-							marbles.push(owners[i]);
-						}
-					}
-					logger.debug('prepared marbles obj', marbles.length, marbles);
-
-					// --- Create Marbles--- //
-					setTimeout(function () {
-						async.each(marbles, function (owner_obj, marble_cb) { 			//iter through each one
-							startup_lib.create_marbles(owner_obj.id, owner_obj.username, marble_cb);
-						}, function (err) {												//marble owner creation finished
-							logger.debug('- finished creating asset');
-							if (err == null) {
-								startup_lib.all_done();												//delay for peer catch up
-							}
-						});
-					}, cp.getBlockDelay());
-				}
-			});
-		}
-		else {
-			logger.debug('- there are no new marble owners to create');
-			startup_lib.all_done();
-		}
-	};
-
-	// Create the marble owner
-	startup_lib.create_owners = function (attempt, username, cb) {
-		const channel = cp.getChannelId();
-		const first_peer = cp.getFirstPeerName(channel);
-		var options = {
-			peer_urls: [cp.getPeersUrl(first_peer)],
-			args: {
-				marble_owner: username,
-				owners_company: process.env.marble_company
-			}
-		};
-		marbles_lib.register_owner(options, function (e, resp) {
-			if (e != null) {
-				console.log('');
-				logger.error('error creating the marble owner', e, resp);
-				cb(e, resp);
-			}
-			else {
-				cb(null, resp);
-			}
-		});
-	};
-
-	// Create 1 marble
-	startup_lib.create_marbles = function (owner_id, username, cb) {
-		var randOptions = startup_lib.build_marble_options(owner_id, username, process.env.marble_company);
-		const channel = cp.getChannelId();
-		const first_peer = cp.getFirstPeerName(channel);
-		console.log('');
-		logger.debug('[startup] going to create marble:', randOptions);
-		var options = {
-			chaincode_id: cp.getChaincodeId(),
-			peer_urls: [cp.getPeersUrl(first_peer)],
-			args: randOptions
-		};
-		marbles_lib.create_a_marble(options, function () {
-			return cb();
-		});
-	};
-
-	// Create random marble arguments (it is not important for it to be random, just more fun)
-	startup_lib.build_marble_options = function (id, username, company) {
-		var colors = ['white', 'green', 'blue', 'purple', 'red', 'pink', 'orange', 'black', 'yellow'];
-		var sizes = ['35', '16'];
-		var color_index = misc.simple_hash(more_entropy + company) % colors.length;		//build a pseudo random index to pick a color
-		var size_index = misc.getRandomInt(0, sizes.length);							//build a random size for this marble
-		return {
-			color: colors[color_index],
-			size: sizes[size_index],
-			owner_id: id,
-			auth_company: process.env.marble_company
-		};
 	};
 
 	// Clean Up OLD KVS

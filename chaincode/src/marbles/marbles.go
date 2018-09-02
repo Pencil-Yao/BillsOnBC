@@ -26,8 +26,6 @@ const Bill_Prefix = "b"
 // search表的映射名
 const IndexName = "userID_billInfoID"
 
-//const HolderIdDayTimeBillTypeBillNoIndexName = "holderId~dayTime-billType-billNo"
-
 type Bill struct {
 	BillInfoID         string        `json:"billInfoID"`         //票据号码
 	BillInfoAmt        string        `json:"billInfoAmt"`        //票据金额
@@ -197,7 +195,7 @@ func (a *BillChaincode) issue(stub shim.ChaincodeStubInterface, args []string) p
 
 	// 更改票据信息和状态并保存票据:票据状态设为新发布
 	bill.State = BillInfoStateNewPublish
-	bill.OperateDate = "UTC" + time.Now().Local().Format("2006-01-02 15:04:05")
+	bill.OperateDate = "UTC " + time.Now().Local().Format("2006-01-02 15:04:05")
 	// 保存票据
 	_, bl := a.putBill(stub, bill)
 	if !bl {
@@ -280,7 +278,7 @@ func (a *BillChaincode) endorse(stub shim.ChaincodeStubInterface, args []string)
 	bill.RejectEndorserID = ""
 	bill.RejectEndorserName = ""
 	bill.State = BillInfoStateEndrWaitSign
-	bill.OperateDate = "UTC" + time.Now().Local().Format("2006-01-02 15:04:05")
+	bill.OperateDate = "UTC " + time.Now().Local().Format("2006-01-02 15:04:05")
 	// 保存票据
 	_, bl = a.putBill(stub, bill)
 	if !bl {
@@ -327,7 +325,7 @@ func (a *BillChaincode) accept(stub shim.ChaincodeStubInterface, args []string) 
 	bill.WaitEndorserID = ""
 	bill.WaitEndorserName = ""
 	bill.State = BillInfoStateEndrSigned
-	bill.OperateDate = "UTC" + time.Now().Local().Format("2006-01-02 15:04:05")
+	bill.OperateDate = "UTC " + time.Now().Local().Format("2006-01-02 15:04:05")
 	// 保存票据
 	_, bl = a.putBill(stub, bill)
 	if !bl {
@@ -367,7 +365,7 @@ func (a *BillChaincode) reject(stub shim.ChaincodeStubInterface, args []string) 
 	bill.RejectEndorserID = args[1]
 	bill.RejectEndorserName = args[2]
 	bill.State = BillInfoStateEndrReject
-	bill.OperateDate = "UTC" + time.Now().Local().Format("2006-01-02 15:04:05")
+	bill.OperateDate = "UTC " + time.Now().Local().Format("2006-01-02 15:04:05")
 	// 保存票据
 	_, bl = a.putBill(stub, bill)
 	if !bl {
