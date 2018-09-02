@@ -7,7 +7,7 @@
     "client": {
         "organization": "Org1MSP",
         "credentialStore": {
-            "path": "/$HOME/.hfc-key-store"
+            "path": "/home/ypf/.hfc-key-store"
         }
     },
     "channels": {
@@ -23,7 +23,7 @@
             "chaincodes": [
                 "marbles:v4"
             ],
-            "x-blockDelay": 10000
+            "x-blockDelay": 60000
         }
     },
     "organizations": {

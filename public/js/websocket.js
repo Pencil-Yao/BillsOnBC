@@ -156,6 +156,13 @@ function connect_to_server() {
         build_actip(acNames);
       }
 
+      // block
+      else if (msgObj.msg === 'block') {
+        console.log(wsTxt + ' rec', msgObj.msg, ': ledger blockheight', msgObj.block_height);
+        if (msgObj.block_delay) block_ui_delay = msgObj.block_delay * 2;				// should be longer than block delay
+        new_block(msgObj.block_height);													// send to blockchain.js
+      }
+
       //general error
       else if (msgObj.msg === 'error') {
         if (msgObj.e && msgObj.e.parsed) {

@@ -101,6 +101,7 @@ module.exports = function (cp, fcw, logger) {
       	if (err != null) send_err(err, data);
         else {
         	options.ws.send(JSON.stringify({ msg: 'tx_issue', state: 'finished', data: options.args.billInfoID}));
+        	ws_server.check_for_updates(ws);
         }
       });
 		}
@@ -117,6 +118,7 @@ module.exports = function (cp, fcw, logger) {
         if (err != null) send_err(err, data);
         else {
           options.ws.send(JSON.stringify({ msg: 'tx_endorse', state: 'finished', data: options.args.billInfoID}));
+          ws_server.check_for_updates(ws);
         }
       });
     }
@@ -133,6 +135,7 @@ module.exports = function (cp, fcw, logger) {
         if (err != null) send_err(err, data);
         else {
           options.ws.send(JSON.stringify({ msg: 'tx_accept', state: 'finished', data: options.args.billInfoID}));
+          ws_server.check_for_updates(ws);
         }
       });
     }
@@ -149,6 +152,7 @@ module.exports = function (cp, fcw, logger) {
         if (err != null) send_err(err, data);
         else {
           options.ws.send(JSON.stringify({ msg: 'tx_reject', state: 'finished', data: options.args.billInfoID}));
+          ws_server.check_for_updates(ws);
         }
       });
     }
@@ -277,7 +281,6 @@ module.exports = function (cp, fcw, logger) {
 				ws_server.check_for_updates(null);
 			}
 			catch (e) {
-				console.log('');
 				logger.error('Error in sch next check\n\n', e);
 				sch_next_check();
 				ws_server.check_for_updates(null);
@@ -288,7 +291,7 @@ module.exports = function (cp, fcw, logger) {
 	// --------------------------------------------------------
 	// Check for Updates to Ledger
 	// --------------------------------------------------------
-	ws_server.check_for_updates = function (ws_client, options) {
+	ws_server.check_for_updates = function (ws_client) {
 		marbles_lib.channel_stats(null, function (err, resp) {
 			var newBlock = false;
 			if (err != null) {
@@ -299,37 +302,28 @@ module.exports = function (cp, fcw, logger) {
 				if (ws_client) ws_client.send(JSON.stringify(eObj)); 									//send to a client
 				else wss.broadcast(eObj);																//send to all clients
 			} else {
-				// if (resp && resp.height && resp.height.low) {
-				// 	if (resp.height.low > known_height || ws_client) {
-				// 		if (!ws_client) {
-				// 			console.log('');
-				// 			logger.info('New block detected!', resp.height.low, resp);
-				// 			known_height = resp.height.low;
-				// 			newBlock = true;
-				// 			logger.debug('[checking] there are new things, sending to all clients');
-				// 			wss.broadcast({ msg: 'block', e: null, block_height: resp.height.low });	//send to all clients
-				// 		} else {
-				// 			logger.debug('[checking] on demand req, sending to a client');
-				// 			var obj = {
-				// 				msg: 'block',
-				// 				e: null,
-				// 				block_height: resp.height.low,
-				// 				block_delay: cp.getBlockDelay()
-				// 			};
-				// 			ws_client.send(JSON.stringify(obj)); 										//send to a client
-				// 		}
-				// 	}
-				// }
+				if (resp && resp.height && resp.height.low) {
+					if (resp.height.low > known_height || ws_client) {
+						if (!ws_client) {
+							logger.info('New block detected!', resp.height.low, resp);
+							known_height = resp.height.low;
+							newBlock = true;
+							logger.debug('[checking] there are new things, sending to all clients');
+							wss.broadcast({ msg: 'block', e: null, block_height: resp.height.low });	//send to all clients
+						} else {
+							logger.debug('[checking] on demand req, sending to a client');
+							var obj = {
+								msg: 'block',
+								e: null,
+								block_height: resp.height.low,
+								block_delay: cp.getBlockDelay()
+							};
+							ws_client.send(JSON.stringify(obj)); 										//send to a client
+						}
+					}
+				}
 			}
-
-			if (newBlock || ws_client) {
-				queryByUserID(ws_client, options, function () {
-					// sch_next_check();						//check again
-				});
-			}
-			// else {
-			// 	sch_next_check();							//check again
-			// }
+			sch_next_check();						//check again
 		});
 	};
 

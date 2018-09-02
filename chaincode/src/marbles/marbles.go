@@ -163,12 +163,6 @@ func (a *BillChaincode) Init(stub shim.ChaincodeStubInterface) pb.Response {
 	alt := stub.GetStringArgs()
 	chaincodeLogger.Info("  GetStringArgs() args found:", alt)
 
-	// store compatible marbles application version
-	//err = stub.PutState("marbles_ui", []byte("4.0.1"))
-	//if err != nil {
-	//	return shim.Error(err.Error())
-	//}
-
 	chaincodeLogger.Info("Ready for action")                          //self-test pass
 	return shim.Success(nil)
 }
@@ -201,38 +195,9 @@ func (a *BillChaincode) issue(stub shim.ChaincodeStubInterface, args []string) p
 	}
 	chaincodeLogger.Infof("%s", timestamp)
 
-	//记录一天同一票据的修改，修改上限次数5次
-	//var dayTime = time.Now().Format("2009-10-10")
-	//
-	//resultIterator, err := stub.GetStateByPartialCompositeKey(HolderIdDayTimeBillTypeBillNoIndexName, []string{bill.HolderID, dayTime, bill.BillInfoID})
-	//if err != nil {
-	//	res := getRetString(1, "Invoke issue get bill list error")
-	//	return shim.Error(res)
-	//}
-	//defer resultIterator.Close()
-	//
-	//var count = 0
-	//for resultIterator.HasNext() {
-	//	_, _ = resultIterator.Next()
-	//
-	//	count ++
-	//
-	//	if count >= 5 {
-	//		res := getRetString(1, "Invoke issue The bill holder has more than 5 bills on the same day by the same type")
-	//		return shim.Error(res)
-	//	}
-	//}
-	//
-	//holderIdDayTimeBillNoIndexKey, err := stub.CreateCompositeKey(HolderIdDayTimeBillTypeBillNoIndexName, []string{bill.HolderID, dayTime, bill.BillInfoType, bill.BillInfoID})
-	//if err != nil {
-	//	res := getRetString(1, "Invoke issue put search table failed")
-	//	return shim.Error(res)
-	//}
-	//stub.PutState(holderIdDayTimeBillNoIndexKey, []byte(time.Now().Format("2017-11-20 12:56:56")))
-
 	// 更改票据信息和状态并保存票据:票据状态设为新发布
 	bill.State = BillInfoStateNewPublish
-	bill.OperateDate = time.Now().Local().Format("2006-01-02 15:04:05")
+	bill.OperateDate = "UTC" + time.Now().Local().Format("2006-01-02 15:04:05")
 	// 保存票据
 	_, bl := a.putBill(stub, bill)
 	if !bl {
@@ -315,7 +280,7 @@ func (a *BillChaincode) endorse(stub shim.ChaincodeStubInterface, args []string)
 	bill.RejectEndorserID = ""
 	bill.RejectEndorserName = ""
 	bill.State = BillInfoStateEndrWaitSign
-	bill.OperateDate = time.Now().Local().Format("2006-01-02 15:04:05")
+	bill.OperateDate = "UTC" + time.Now().Local().Format("2006-01-02 15:04:05")
 	// 保存票据
 	_, bl = a.putBill(stub, bill)
 	if !bl {
@@ -362,7 +327,7 @@ func (a *BillChaincode) accept(stub shim.ChaincodeStubInterface, args []string) 
 	bill.WaitEndorserID = ""
 	bill.WaitEndorserName = ""
 	bill.State = BillInfoStateEndrSigned
-	bill.OperateDate = time.Now().Local().Format("2006-01-02 15:04:05")
+	bill.OperateDate = "UTC" + time.Now().Local().Format("2006-01-02 15:04:05")
 	// 保存票据
 	_, bl = a.putBill(stub, bill)
 	if !bl {
@@ -402,7 +367,7 @@ func (a *BillChaincode) reject(stub shim.ChaincodeStubInterface, args []string) 
 	bill.RejectEndorserID = args[1]
 	bill.RejectEndorserName = args[2]
 	bill.State = BillInfoStateEndrReject
-	bill.OperateDate = time.Now().Local().Format("2006-01-02 15:04:05")
+	bill.OperateDate = "UTC" + time.Now().Local().Format("2006-01-02 15:04:05")
 	// 保存票据
 	_, bl = a.putBill(stub, bill)
 	if !bl {
