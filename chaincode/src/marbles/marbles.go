@@ -8,6 +8,7 @@ import (
 	"time"
 	"strconv"
 	"fmt"
+	"strings"
 )
 
 // logger
@@ -192,6 +193,27 @@ func (a *BillChaincode) issue(stub shim.ChaincodeStubInterface, args []string) p
 		return shim.Error(res)
 	}
 	chaincodeLogger.Infof("%s", timestamp)
+
+	// issuer holder payee acceptor's format right and exit
+	if !strings.Contains(bill.HolderID, "CIM"){
+		res := getRetString(1, "Invoke issue failed: holderID format is wrong or not exit ")
+		return shim.Error(res)
+	}
+
+	if !strings.Contains(bill.IssuerID, "CIM"){
+		res := getRetString(1, "Invoke issue failed: issuerID format is wrong or not exit ")
+		return shim.Error(res)
+	}
+
+	if !strings.Contains(bill.PayeeID, "CIM"){
+		res := getRetString(1, "Invoke issue failed: payeeID format is wrong or not exit ")
+		return shim.Error(res)
+	}
+
+	if !strings.Contains(bill.AcceptorID, "CIM"){
+		res := getRetString(1, "Invoke issue failed: acceptorID format is wrong or not exit ")
+		return shim.Error(res)
+	}
 
 	// 更改票据信息和状态并保存票据:票据状态设为新发布
 	bill.State = BillInfoStateNewPublish
