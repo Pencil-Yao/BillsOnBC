@@ -1,13 +1,17 @@
+## 0.测试环境
+- 本次安装测试环境为阿里云服务器，实例名称：ecs.c5.xlarge
+- 本次测试时间：2018-09-04
+
 ## 1. Git
 如果未安装[Git](https://git-scm.com/downloads)
 或者命令行输入
 ```
-sudo apt install git -y
+apt install git -y
 ```
 检查git是否安装
 ```
 git --version
-git version 2.18.0
+git version 2.7.4
 ```
 ## 2. Golang
 安装go语言环境，由于采用Fabric 1.2.0所以需要go语言环境>1.10.x
@@ -15,21 +19,47 @@ git version 2.18.0
 - [GoLang 安装](https://golang.org/doc/install)
 - [GoLang 文档](https://golang.org/doc/)
 
-golang还有中文网站，[下载页](https://studygolang.com/dl)。验证go安装
+golang还有中文网站，[下载页](https://studygolang.com/dl)。
+命令行环境下
+```
+wget https://studygolang.com/dl/golang/go1.10.4.linux-amd64.tar.gz
+tar -C /usr/local/ -xf go1.10.4.linux-amd64.tar.gz
+```
+将go语言添加进入环境：
+```
+vim ~/.bashrc
+
+export GOPATH=/home/ypf/ypf-app/goapp
+export PATH=$GOPATH/bin:/usr/local/go/bin:$PATH
+```
+验证go安装
 ```
 go version
+go version go1.10.4 linux/amd64
 ```
-并且还要设置**GOPATH**
+并且不要忘记设置**GOPATH**
 ## 3. Node.js
 下载nodejs
 - [Node.js 下载页](https://nodejs.org/en/download/)
+命令行环境下
+```
+wget https://nodejs.org/dist/v8.11.4/node-v8.11.4-linux-x64.tar.xz
+tar -C /usr/local/ -xf node-v8.11.4-linux-x64.tar.xz
+```
+将nodejs语言添加进入环境：
+```
+vim ~/.bashrc
+
+export PATH=/usr/local/node-v8.11.4-linux-x64/bin:$PATH
+```
 验证node.js
 ```
 node -v
-v4.2.6
+v8.11.4
 ```
 ## 4. Docker
 - [Docker 下载页](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+Docker安装上述下载链接已经提供了命令行安装方法，不予列出。
 验证docker安装
 ```
 docker --version
@@ -40,21 +70,23 @@ Docker version 18.06.1-ce, build e68fc7a
 验证docker-compose安装
 ```
 docker-compose --version
-docker-compose version 1.13.0, build 1719ceb
+docker-compose version 1.22.0, build f46880fe
 ```
 ## 6. Fabric环境与实例安装
 安装Fabric实例
 ```
+mkdir -p ~/go/src
+cd ~/go/src
 git clone https://github.com/hyperledger/fabric-samples
 ```
 安装Fabric环境
 ```
 cd fabric-samples/scripts
-sudo ./bootstrap.sh
+./bootstrap.sh
 ```
 正常安装完成后，查看安装docker
 ```
-sudo docker images
+docker images
 
 hyperledger/fabric-ca          1.2.0               66cc132bd09c        2 months ago        252MB
 hyperledger/fabric-ca          latest              66cc132bd09c        2 months ago        252MB

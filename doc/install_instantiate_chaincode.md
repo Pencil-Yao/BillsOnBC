@@ -9,14 +9,18 @@ npm install
 ```
 安装过程未出现任何error说明安装成功
 ## 2. 获得加密证书材料
-**关键步骤**打开配置文件`<BillsOnBC root>/config/connection_profile_local.json`
+**关键步骤**打开配置文件`vim <BillsOnBC root>/config/connection_profile_local.json`
 - `organizations -> x-adminCert -> path`
 - `organizations -> x-adminKeyStore -> path`
 
-将以上`path`修改为对应的fabric-sample/basic-network中的加密材料，主要修改前置根目录到正确位置。
+将以上`path`修改为对应的fabric-sample/basic-network中的加密材料，主要修改前置根目录到正确位置。以我用的阿里云服务计算机为例（由于我是root用户操作）：
+```
+/root/go/src/fabric-samples/basic-network/crypto-config/.....
+```
+kvstore的目录位置修正：
 - `client -> credentialStore -> path`
 
-client的path由于fabric-client的bug，直接修改为`/root/.hfc-key-store`
+client的path由于fabric-client的bug，根据我们在[创建kvstore](get_network.md)做的操作，直接修改为`$HOME/.hfc-key-store`
 修改完成以后，可以进行链码安装工作。
 ## 3. 安装和实例化链码
 进入以下目录：

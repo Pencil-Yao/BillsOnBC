@@ -1,11 +1,12 @@
 ## 1. 启动Fabric网络
 ```
 cd fabric-sample/fabcar
-sudo ./startFabric.sh
+./startFabric.sh
 ```
+**关键提示**在阿里的云服务器上会出现启动失败的现象，错误类型**SIGSEGV**，只需要在basic_network的docker-compose.yml中，对peer,orderer,cli节点配置的environment下添加GODEBUG=netdns=go可以解决问题。
 ### 验证启动成功
 ```
-sudo docker ps
+docker ps
 ```
 如果看到以下docker启动成功，说明fabcar网络启动成功
 ```
@@ -30,8 +31,8 @@ node registerUser.js
 ```
 运行以上命令便可以在该目录下创建一个.hfc-key-store目录。
 
-由于fabric-client.js存在bug问题，我们应当将.hfc-key-sore目录放在主目录下，由于运行环境一般使用sudo，因此：
+由于fabric-client.js存在bug问题，我们应当将.hfc-key-sore目录放在主目录下，因此：
 ```
-mv .hfc-key-store /root
+mv .hfc-key-store ~
 ```
 恭喜，至此**区块链票据**的基础网络已经部署成功了。

@@ -17,6 +17,10 @@ body{
   padding: 14px 20px;
 }
 
+#document {
+  font-size: 12px;
+}
+
 #whoAmI {
   line-height: 60px;
   position: absolute;
