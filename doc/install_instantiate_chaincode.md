@@ -20,8 +20,7 @@ npm install
 kvstore的目录位置修正：
 - `client -> credentialStore -> path`
 
-client的path由于fabric-client的bug，根据我们在[创建kvstore](get_network.md)做的操作，直接修改为`$HOME/.hfc-key-store`
-修改完成以后，可以进行链码安装工作。
+client的path由于fabric-client的bug，根据我们在[创建kvstore](get_network.md)做的操作，直接修改为`/root/.hfc-key-store`修改完成以后，可以进行链码安装工作。
 ## 3. 安装和实例化链码
 进入以下目录：
 ```
