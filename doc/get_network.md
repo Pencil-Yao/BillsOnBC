@@ -30,17 +30,30 @@ fabcar网络使用到了fabric的node.js SDK，因此输入以下命令安装网
 ```
 npm install
 ```
-**注意**npm install过程中可能出现ECASS的错误，这时可能无法完成正常的kvstore创建，那样的话为了之后演示的顺利进行，你可以选择从BillsOnBC文件夹中取出`mv BillsOnBC/.hfc-key-store /root`，并直接跳过后面的创建kvstore的步骤。
+**注意**npm install过程中可能出现`gyp WARN EACCES user "root" does not have permission to access the dev dir...`的错误。
+- 方案一，在`vim ~/.bashrc`中添加环境变量
+```
+export NPM_CONFIG_PREFIX=/root/.npm-global 
+export PATH=$NPM_CONFIG_PREFIX/bin:$PATH
+```
+启用`source ~/.bashrc`后重试。
+- 方案二，如果在方案一中出现gRPC安装失败的情况，请更换npm源到[**淘宝NPM**](https://npm.taobao.org/)，删除旧有的安装目录，重新安装：
+```
+rm -r node_modul
+cnpm install
+```
+- 方案三，如果方案一，方案二都不奏效，这时可能无法完成正常的kvstore创建，那样的话为了之后演示的顺利进行，你可以选择从BillsOnBC文件夹中取出`mv BillsOnBC/.hfc-key-store /root`，并直接跳过后面的创建kvstore的步骤。
 ## 3. 创建kvstore
 kvstore是存放组织中admin用户的身份证书和tls证书的地址，在fabcar中kvstore在.hfc-key-store文件夹内，运行一下命令登记并注册一个admin账户：
 ```
 node enrollAdmin.js
 node registerUser.js
 ```
-运行以上命令便可以在该目录下创建一个.hfc-key-store目录。
+运行以上命令便可以在该目录下创建一个hfc-key-store目录。
 
-由于fabric-client.js存在bug问题，我们应当将.hfc-key-sore目录放在主目录下，因此：
+由于fabric-client.js存在bug问题，我们应当将hfc-key-sore目录放在主目录下，因此：
 ```
-mv .hfc-key-store /root
+mkdir /root/.hfc-key-store
+mv hfc-key-store/* /root/.hfc-key-store
 ```
 恭喜，至此**区块链票据**的基础网络已经部署成功了。

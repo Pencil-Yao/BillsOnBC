@@ -5,7 +5,7 @@
 - 底层平台使用的是[Hyperledger Fabric](https://github.com/hyperledger/fabric/tree/master/docs)，一个Linux基金会的开源项目，你可以通过链接进行一定了解。
 - 该系统后端使用nodejs，框架参考了IBM的开源项目[Marbles](https://github.com/IBM-Blockchain/marbles)，该项目也意在帮助开发者了解fabric的链码与应用开发。
 - 该系统的链码参考了ChainNova的开项目[trainingProjects](https://github.com/ChainNova/trainingProjects)
-- 在线测试，[地址](http://47.100.238.193:3002/login)
+- 在线测试，[地址](http://47.100.238.193:3002/login)(非常抱歉服务器已经到期了)
 
 ### 版本
 该Demo使用可以与**Hyperledger Fabric v1.2x v1.1x**兼容，其他版本未经测试。
@@ -28,7 +28,7 @@
 13. 持票人证件号 持票人的唯一标识 
 
 ## 区块链票据启动
-如果你想本地搭建**区块链票据**，并且过去未运行过Fabric网络请从第0步开始，如果你过去已经搭建过了Fabric网络请从第1步开始，如果你不想本地搭建区块链环境，你可以直接访问[区块链票据](http://47.100.238.193:3002/login)，该环境是我搭建在阿里云服务器上用于E2E的作品展示，并从第X步开始直接介绍区块链票据的主要功能。
+如果你想本地搭建**区块链票据**，并且过去未运行过Fabric网络请从第0步开始，如果你过去已经搭建过了Fabric网络请从第1步开始
 
 本网络的系统环境：Ubuntu 16.04
 ### 0. 搭建本地Fabric环境
@@ -43,5 +43,3 @@ Fabric提供了本地docker环境的多节点部署，为app开发提供有力�
 完成了链码的安装和实例化，现在我们将要[启动区块链票据系统](doc/start_billsonbc.md)，来完成我们整个环境搭建任务
 ### 4. 区块链票据系统
 完成0-3步的环境部署与安装，现在你可以正式进入区块链票据系统，[探索一番](doc/introduction.md)
-
-如果你的时间非常宝贵，亦或者你着眼与应用而不是开发，你可以直接浏览[在线网站](http://47.100.238.193:3002/login)

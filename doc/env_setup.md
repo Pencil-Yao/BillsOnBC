@@ -29,7 +29,7 @@ tar -C /usr/local/ -xf go1.10.4.linux-amd64.tar.gz
 ```
 vim ~/.bashrc
 
-export GOPATH=/home/ypf/ypf-app/goapp
+export GOPATH=/root/go
 export PATH=$GOPATH/bin:/usr/local/go/bin:$PATH
 ```
 验证go安装
@@ -75,10 +75,11 @@ docker-compose version 1.22.0, build f46880fe
 ## 6. Fabric环境与实例安装
 安装Fabric实例
 ```
-mkdir -p ~/go/src
-cd ~/go/src
+mkdir -p /root/go/src/github.com/hyperledger
+cd /root/go/src/github.com/hyperledger
 git clone https://github.com/hyperledger/fabric-samples
-```
+git checkout release-1.2
+ ```
 安装Fabric环境
 ```
 cd fabric-samples/scripts
